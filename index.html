@@ -1435,7 +1435,20 @@ var TTS=(function(){
     };
     function gp(){return PROF[AGE]||PROF.rise;}
     function gv(p){var vs=speechSynthesis.getVoices();for(var i=0;i<p.voices.length;i++){for(var j=0;j<vs.length;j++){if(vs[j].name===p.voices[i])return vs[j];}}for(var k=0;k<vs.length;k++){if(vs[k].lang&&vs[k].lang.startsWith('en'))return vs[k];}return vs[0]||null;}
-    function se(t){return t.split('').filter(function(c){var cp=c.codePointAt?c.codePointAt(0):c.charCodeAt(0);return cp<0x2600||(cp>0x27BF&&cp<0x1F000)||cp>0x1FFFF;}).join('').replace(/  */g,' ').trim();}
+    function se(t){
+  if(!t)return'';
+  // Fix scripture references so colon is not read as time
+  // e.g. Jeremiah 9:13 -> Jeremiah 9 verse 13
+  t=t.replace(/(\d+):(\d+)/g,'$1 verse $2');
+  // Fix numbered books: 1 Samuel -> First Samuel
+  t=t.replace(/\b1\s+(Samuel|Kings|Chronicles|Corinthians|Thessalonians|Timothy|Peter|John)\b/g,'First $1');
+  t=t.replace(/\b2\s+(Samuel|Kings|Chronicles|Corinthians|Thessalonians|Timothy|Peter|John)\b/g,'Second $1');
+  t=t.replace(/\b3\s+(John)\b/g,'Third $1');
+  // Em dashes to natural pause
+  t=t.replace(/\s*\u2014\s*/g,', ');
+  // Strip emoji
+  return t.split('').filter(function(c){var cp=c.codePointAt?c.codePointAt(0):c.charCodeAt(0);return cp<0x2600||(cp>0x27BF&&cp<0x1F000)||cp>0x1FFFF;}).join('').replace(/  */g,' ').trim();
+}
     function rb(btn){if(!btn)return;btn.classList.remove('speaking');btn.innerHTML='🔊';btn.setAttribute('aria-label','Listen');}
     function stop(){if(hasTTS)speechSynthesis.cancel();speaking=false;rb(activeBtn);activeBtn=null;}
     function speak(raw,btn){
