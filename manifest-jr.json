@@ -1,0 +1,26 @@
+{
+  "name": "SPARROW Jr. — Meet God in the Moment",
+  "short_name": "SPARROW Jr.",
+  "description": "A children's faith companion. Helping children know God, trust God, and talk with God every day. A Ministry of Inscribe4u.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFEF9",
+  "theme_color": "#4A7C59",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-jr-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-jr-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "lifestyle"],
+  "lang": "en"
+}
