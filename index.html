@@ -1073,88 +1073,63 @@ function burst(x,y,n){
 function ann(msg){var el=document.getElementById('a11y');if(el){el.textContent='';setTimeout(function(){el.textContent=msg;},50);}}
 function goTo(id){if(TTS&&TTS.stop)TTS.stop();document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var t=document.getElementById(id);if(t){t.classList.add('active');window.scrollTo(0,0);}}
 function selectAge(age){
-  console.log('Age selected:', age);
   AGE = age;
   document.body.classList.toggle('nest-mode', age === 'nest');
   var badge = document.getElementById('library-badge');
-  if(badge) badge.textContent = AGE_MAP[age].badge;
-  // Show all screens, hide all, show library
+  if(badge) badge.textContent = (LANG==='es'&&ES.ui) ? ({nest:ES.ui.nest_badge,rise:ES.ui.rise_badge,soar:ES.ui.soar_badge}[age]||AGE_MAP[age].badge) : AGE_MAP[age].badge;
   var screens = document.querySelectorAll('.screen');
   for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
-  var libScreen = document.getElementById('screen-library');
-  if(libScreen) libScreen.classList.add('active');
-  window.scrollTo(0,0);
-  console.log('Now showing screen-library');
+  var s = document.getElementById('screen-library');
+  if(s){ s.classList.add('active'); window.scrollTo(0,0); }
 }
 
 function selectLibrary(lib){
-  console.log('Library selected:', lib);
   LIBRARY = lib;
   var m = AGE_MAP[AGE];
-  // Update topics screen header
   var badge = document.getElementById('topics-badge');
   var titleEl = document.getElementById('topics-title-text');
   var promptEl = document.getElementById('topics-prompt');
-  if(badge) badge.textContent = m.badge;
-  if(lib === 'emotion'){
-    if(titleEl) titleEl.textContent = "What\'s on your heart?";
-    if(promptEl) promptEl.textContent = m.prompt;
-  } else if(lib === 'journey'){
-    if(titleEl) titleEl.textContent = "What\'s happening in your life?";
+  if(badge) badge.textContent = (LANG==='es'&&ES.ui) ? ({nest:ES.ui.nest_badge,rise:ES.ui.rise_badge,soar:ES.ui.soar_badge}[AGE]||m.badge) : m.badge;
+  if(lib==='emotion'){
+    if(titleEl) titleEl.textContent = LANG==='es' ? (ES.ui&&ES.ui.topics_title_emotion)||"What's on your heart?" : "What's on your heart?";
+    if(promptEl) promptEl.textContent = (LANG==='es'&&ES.ui) ? ({nest:ES.ui.nest_prompt,rise:ES.ui.rise_prompt,soar:ES.ui.soar_prompt}[AGE]||m.prompt) : m.prompt;
+  } else if(lib==='journey'){
+    if(titleEl) titleEl.textContent = "What's happening in your life?";
     if(promptEl) promptEl.textContent = 'Choose the situation that fits best.';
-  } else if(lib === 'virtues'){
+  } else if(lib==='virtues'){
     if(titleEl) titleEl.textContent = 'Who do you want to grow in being?';
     if(promptEl) promptEl.textContent = 'Choose a virtue you want to grow in.';
   }
-  // Build the topic grid
-  var g = document.getElementById('topicsGrid');
-  if(g){
-    g.innerHTML = '';
-    var list = lib==='journey' ? JOURNEY_TOPICS : lib==='virtues' ? VIRTUES_TOPICS : TOPICS;
-    console.log('Building grid with', list.length, 'topics from', lib);
-    for(var i=0;i<list.length;i++){
-      (function(t, idx){
-        var btn = document.createElement('button');
-        btn.className = 'topic-tile';
-        btn.setAttribute('role','listitem');
-        btn.setAttribute('aria-label', t.name);
-        btn.style.setProperty('--td', (0.05 + idx*0.055)+'s');
-        btn.style.setProperty('--delay', t.delay || '0s');
-        btn.innerHTML = '<span class="topic-emoji" style="--td:'+(t.delay||'0s')+'">'+t.emoji+'</span>'
-          + '<span class="topic-name">'+t.name+'</span>'
-          + (t.verse ? '<span class="topic-ref">'+t.verse.ref+'</span>' : '');
-        btn.onclick = function(){ selectTopic(t.id); };
-        g.appendChild(btn);
-      })(list[i], i);
-    }
-  }
-  // Navigate to topics screen
+  buildGrid();
   var screens = document.querySelectorAll('.screen');
   for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
-  var topicsScreen = document.getElementById('screen-topics');
-  if(topicsScreen) topicsScreen.classList.add('active');
-  window.scrollTo(0,0);
-  console.log('Now showing screen-topics with', lib, 'library');
+  var s = document.getElementById('screen-topics');
+  if(s){ s.classList.add('active'); window.scrollTo(0,0); }
 }
 
 /* ── TOPICS GRID ────────────────────────────────────────────── */
 function buildGrid(){
-  var g=document.getElementById('topicsGrid');
-  g.innerHTML='';
-  var sourceList = LIBRARY==='journey' ? JOURNEY_TOPICS : LIBRARY==='virtues' ? VIRTUES_TOPICS : TOPICS;
-  sourceList.forEach(function(t,i){
-    var btn=document.createElement('button');
-    btn.className='topic-tile';
-    btn.setAttribute('role','listitem');
-    btn.setAttribute('aria-label',t.name+(t.verse?' — '+t.verse.ref:''));
-    btn.style.setProperty('--td',(0.05+i*0.055)+'s');
-    btn.style.setProperty('--delay',t.delay);
-    btn.innerHTML='<span class="topic-emoji" style="--td:'+t.delay+'">'+t.emoji+'</span>'
-      +'<span class="topic-name">'+t.name+'</span>'
-      +(t.verse?'<span class="topic-ref">'+t.verse.ref+'</span>':'');
-    btn.onclick=function(){selectTopic(t.id);};
-    g.appendChild(btn);
-  });
+  var g = document.getElementById('topicsGrid');
+  if(!g) return;
+  g.innerHTML = '';
+  var list = LIBRARY==='journey' ? JOURNEY_TOPICS : LIBRARY==='virtues' ? VIRTUES_TOPICS : TOPICS;
+  for(var i=0;i<list.length;i++){
+    (function(t, idx){
+      var nm = (LIBRARY==='emotion' && LANG==='es' && ES.topics && ES.topics[t.id]) ? ES.topics[t.id] : t.name;
+      var ref = t.verse ? ((LANG==='es' && ES.data && ES.data[t.id]) ? ES.data[t.id].verse.ref : t.verse.ref) : '';
+      var btn = document.createElement('button');
+      btn.className = 'topic-tile';
+      btn.setAttribute('role','listitem');
+      btn.setAttribute('aria-label', nm);
+      btn.style.setProperty('--td', (0.05 + idx*0.055)+'s');
+      btn.style.setProperty('--delay', t.delay||'0s');
+      btn.innerHTML = '<span class="topic-emoji" style="--td:'+(t.delay||'0s')+'">'+t.emoji+'</span>'
+        + '<span class="topic-name">'+nm+'</span>'
+        + (ref ? '<span class="topic-ref">'+ref+'</span>' : '');
+      btn.addEventListener('click', function(){ selectTopic(t.id); });
+      g.appendChild(btn);
+    })(list[i], i);
+  }
 }
 
 /* ── SELECT TOPIC ───────────────────────────────────────────── */
@@ -1601,46 +1576,8 @@ function setLang(lang) {
 }
 
 // buildGrid respects LIBRARY — emotion | journey | virtues
-var _bg0=buildGrid;
-buildGrid=function(){
-  var g=document.getElementById('topicsGrid');if(!g)return;g.innerHTML='';
-  var sourceList = LIBRARY==='journey' ? JOURNEY_TOPICS : LIBRARY==='virtues' ? VIRTUES_TOPICS : TOPICS;
-  sourceList.forEach(function(t,i){
-    var nm = t.name;
-    if(LIBRARY==='emotion' && LANG==='es' && ES.topics[t.id]) nm = ES.topics[t.id];
-    var ref = (t.verse && LANG==='es' && ES.data[t.id]) ? ES.data[t.id].verse.ref : (t.verse ? t.verse.ref : '');
-    var btn=document.createElement('button');btn.className='topic-tile';
-    btn.setAttribute('role','listitem');btn.setAttribute('aria-label',nm);
-    btn.style.setProperty('--td',(0.05+i*0.055)+'s');
-    btn.style.setProperty('--delay',t.delay||'0s');
-    btn.innerHTML='<span class="topic-emoji" style="--td:'+(t.delay||'0s')+'">'+t.emoji+'</span><span class="topic-name">'+nm+'</span>'+(ref?'<span class="topic-ref">'+ref+'</span>':'');
-    btn.onclick=(function(id){return function(){selectTopic(id);};})(t.id);
-    g.appendChild(btn);
-  });
-};
 
 // selectAge — language-aware, goes to library screen
-var _sa0=selectAge;
-selectAge=function(age){
-  console.log('Age selected:', age);
-  AGE=age;
-  document.body.classList.toggle('nest-mode',age==='nest');
-  // Update library badge in correct language
-  var badge=document.getElementById('library-badge');
-  if(badge){
-    if(LANG==='es'&&ES.ui){
-      badge.textContent={nest:ES.ui.nest_badge,rise:ES.ui.rise_badge,soar:ES.ui.soar_badge}[age]||AGE_MAP[age].badge;
-    } else {
-      badge.textContent=AGE_MAP[age].badge;
-    }
-  }
-  // Always go to library screen
-  var screens=document.querySelectorAll('.screen');
-  for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
-  var lib=document.getElementById('screen-library');
-  if(lib) lib.classList.add('active');
-  window.scrollTo(0,0);
-};
 
 var _pop0=populate;
 populate=function(){
