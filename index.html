@@ -1057,6 +1057,17 @@ function selectAge(age){
   for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
   var s = document.getElementById('screen-library');
   if(s){ s.classList.add('active'); window.scrollTo(0,0); }
+  // Block lib-card clicks for 500ms to prevent touch event ghost clicks
+  var cards = document.querySelectorAll('.lib-card');
+  for(var j=0;j<cards.length;j++){
+    cards[j].style.pointerEvents = 'none';
+  }
+  setTimeout(function(){
+    var cards2 = document.querySelectorAll('.lib-card');
+    for(var k=0;k<cards2.length;k++){
+      cards2[k].style.pointerEvents = '';
+    }
+  }, 500);
 }
 
 function selectLibrary(lib){
@@ -1081,6 +1092,11 @@ function selectLibrary(lib){
   for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
   var s = document.getElementById('screen-topics');
   if(s){ s.classList.add('active'); window.scrollTo(0,0); }
+  // Block topic tile clicks for 500ms to prevent ghost clicks
+  setTimeout(function(){
+    var tiles = document.querySelectorAll('.topic-tile');
+    for(var j=0;j<tiles.length;j++) tiles[j].style.pointerEvents = '';
+  }, 500);
 }
 
 
@@ -1588,6 +1604,13 @@ selectAge=function(age){
   for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
   var s = document.getElementById('screen-library');
   if(s){ s.classList.add('active'); window.scrollTo(0,0); }
+  // Block lib-card ghost clicks for 600ms after navigation
+  var cards = document.querySelectorAll('.lib-card');
+  for(var j=0;j<cards.length;j++) cards[j].style.pointerEvents = 'none';
+  setTimeout(function(){
+    var c2 = document.querySelectorAll('.lib-card');
+    for(var k=0;k<c2.length;k++) c2[k].style.pointerEvents = '';
+  }, 600);
 };
 
 var _pop0=populate;
