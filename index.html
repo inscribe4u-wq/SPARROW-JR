@@ -1059,27 +1059,27 @@ function goTo(id){if(TTS&&TTS.stop)TTS.stop();document.querySelectorAll('.screen
 function selectAge(age){
   AGE=age;
   document.body.classList.toggle('nest-mode',age==='nest');
-  var m=AGE_MAP[age];
-  document.getElementById('topics-badge').textContent=m.badge;
-  document.getElementById('topics-prompt').textContent=m.prompt;
-  buildGrid();
-  goTo('screen-topics');
+  goTo('screen-library');
 }
 
 /* ── TOPICS GRID ────────────────────────────────────────────── */
 function buildGrid(){
   var g=document.getElementById('topicsGrid');
   g.innerHTML='';
-  TOPICS.forEach(function(t,i){
+  // Pick the correct data source based on active library
+  var source = LIBRARY === 'journey' ? JOURNEY_TOPICS
+             : LIBRARY === 'virtues' ? VIRTUES_TOPICS
+             : TOPICS;
+  source.forEach(function(t,i){
     var btn=document.createElement('button');
     btn.className='topic-tile';
     btn.setAttribute('role','listitem');
-    btn.setAttribute('aria-label',t.name+' — '+t.verse.ref);
+    btn.setAttribute('aria-label',t.name+' — '+(t.verse?t.verse.ref:''));
     btn.style.setProperty('--td',(0.05+i*0.055)+'s');
-    btn.style.setProperty('--delay',t.delay);
-    btn.innerHTML='<span class="topic-emoji" style="--td:'+t.delay+'">'+t.emoji+'</span>'
+    btn.style.setProperty('--delay',t.delay||'0s');
+    btn.innerHTML='<span class="topic-emoji" style="--td:'+(t.delay||'0s')+'">'+t.emoji+'</span>'
       +'<span class="topic-name">'+t.name+'</span>'
-      +'<span class="topic-ref">'+t.verse.ref+'</span>';
+      +'<span class="topic-ref">'+(t.verse?t.verse.ref:'')+'</span>';
     btn.onclick=function(){selectTopic(t.id);};
     g.appendChild(btn);
   });
@@ -1088,7 +1088,14 @@ function buildGrid(){
 /* ── SELECT TOPIC ───────────────────────────────────────────── */
 function selectTopic(id){
   TOPIC=null;
-  for(var i=0;i<TOPICS.length;i++){if(TOPICS[i].id===id){TOPIC=TOPICS[i];break;}}
+  // Search the active library first, then fall back to others
+  var allSources=[TOPICS, JOURNEY_TOPICS, VIRTUES_TOPICS];
+  for(var s=0;s<allSources.length;s++){
+    for(var i=0;i<allSources[s].length;i++){
+      if(allSources[s][i].id===id){TOPIC=allSources[s][i];break;}
+    }
+    if(TOPIC)break;
+  }
   if(!TOPIC)return;
   STEP='s';
   resetSteps();
