@@ -391,28 +391,10 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
   <div id="skyCanvas" style="position:absolute;inset:0;pointer-events:none;" aria-hidden="true"></div>
   <div id="birdCanvas" style="position:absolute;top:0;left:0;right:0;height:55%;pointer-events:none;" aria-hidden="true"></div>
   <div class="welcome-wrap">
-    <div class="logo-mark" id="logoMark" aria-hidden="true"
-      onclick="this.classList.add('flap');var me=this;setTimeout(function(){me.classList.remove('flap');},700);">
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="22" cy="28" rx="10" ry="7" fill="white" opacity="0.95"/>
-        <circle cx="32" cy="20" r="6" fill="white" opacity="0.95"/>
-        <path d="M37 19 L42 20 L37 22 Z" fill="white" opacity="0.8"/>
-        <circle cx="34" cy="19" r="1.2" fill="#556B57"/>
-        <path d="M22 26 Q12 16 8 20 Q14 22 18 27 Z" fill="white" opacity="0.85"/>
-        <path d="M12 30 Q10 36 14 35 Q13 31 16 30 Q14 34 18 34 Q17 30 20 29 Z" fill="white" opacity="0.75"/>
-        <line x1="20" y1="35" x2="18" y2="40" stroke="white" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>
-        <line x1="24" y1="35" x2="22" y2="40" stroke="white" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>
-        <line x1="18" y1="40" x2="15" y2="42" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-        <line x1="18" y1="40" x2="18" y2="43" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-        <line x1="18" y1="40" x2="21" y2="42" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-        <line x1="22" y1="40" x2="19" y2="42" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-        <line x1="22" y1="40" x2="22" y2="43" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-        <line x1="22" y1="40" x2="25" y2="42" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-      </svg>
+    <div style="width:220px;margin:0 auto 8px;animation:fadeUp .6s ease both;">
+      <img id="soar-logo" src="" alt="Soar — SPARROW Jr." style="width:100%;height:auto;filter:drop-shadow(0 4px 16px rgba(58,90,66,.18));"/>
     </div>
-    <h1 class="welcome-title">SPARROW</h1>
-    <p class="welcome-title-jr">Jr.</p>
-    <p class="welcome-sub">Seek &middot; Open &middot; Act &middot; Respond</p>
+    <p class="welcome-sub" style="font-size:15px;font-weight:600;color:#2D4A3E;margin-bottom:4px;">Meet God in the Moment</p>
     <p class="welcome-tag">A children's faith companion that grows with you<br>and meets you in Scripture, reflection, action, and prayer.</p>
     <p class="age-label">Who is reading today?</p>
     <div class="age-cards" role="group" aria-label="Select age group">
@@ -1286,9 +1268,24 @@ function pickChoice(btn,ev){
   btn.classList.add('sel');btn.setAttribute('aria-pressed','true');
   if(AGE!=='nest'||!TOPIC)return;
   var lb=btn.querySelector('.c-label');if(!lb)return;
-  var ta=CHOICE_ACK[TOPIC.id];if(!ta)return;
-  var ack=ta[lb.textContent.trim()];if(!ack)return;
-  if(TTS&&TTS.stop)TTS.stop();setTimeout(function(){TTS.speakDirect(ack);},300);
+  var label=lb.textContent.trim();
+  // Try static CHOICE_ACK first, then dynamic session choice_ack
+  var ack=null;
+  var ta=CHOICE_ACK[TOPIC.id];
+  if(ta&&ta[label]){ack=ta[label];}
+  else if(window._dynChoiceAck&&window._dynChoiceAck[label]){ack=window._dynChoiceAck[label];}
+  else{ack='Thank you for sharing that. God sees exactly how you feel, and He loves you so much.';}
+  // Show ack as a card below choices
+  var existing=document.getElementById('choice-ack-card');
+  if(existing)existing.remove();
+  var card=document.createElement('div');
+  card.id='choice-ack-card';
+  card.style.cssText='background:#F0F7F0;border-left:3px solid #4A7C59;border-radius:0 12px 12px 0;padding:14px 16px;margin-top:14px;animation:fadeUp .3s ease both;';
+  card.innerHTML='<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;font-style:italic;">\uD83D\uDD4A\uFE0F '+ack+'</p>';
+  var choicesEl=btn.closest('.q-choices');
+  if(choicesEl&&choicesEl.parentNode)choicesEl.parentNode.insertBefore(card,choicesEl.nextSibling);
+  if(TTS&&TTS.stop)TTS.stop();
+  setTimeout(function(){TTS.speakDirect(ack);},300);
 }
 
 function toggleStep(el,ev){
@@ -2014,8 +2011,9 @@ function buildSystemPrompt(topicId, age, lang) {
     '  "question": {',
     '    "text": "the question text",',
     '    "choices": [{"e":"emoji","l":"label"},{"e":"emoji","l":"label"},{"e":"emoji","l":"label"},{"e":"emoji","l":"label"}],',
+    '    "choice_ack": {"label 1": "warm affirming 1-2 sentence response for Nestlings who pick this choice — never say right or wrong, always affirm the feeling and gently point to God", "label 2": "...", "label 3": "...", "label 4": "..."},',
     '    "prompt": "the journal writing prompt (for Rising and Soaring only — include even if empty string for Nestlings)"',
-    '  },',
+    '  }',
     '  "action": {',
     '    "title": "action title",',
     '    "detail": "one sentence explaining the action",',
@@ -2295,14 +2293,17 @@ function populateDynamic(session, topicId, age, lang) {
             + '<span class="c-label">' + c.l + '</span></button>';
         }).join('') + '</div>';
     // Store choice acks in temp so pickChoice can use them
-    window._dynChoiceAck = {};
-    q.choices.forEach(function(c){ window._dynChoiceAck[c.l] = ''; });
+    window._dynChoiceAck = q.choice_ack || {};
+    // Fill any missing keys with a gentle default
+    q.choices.forEach(function(c){ if(!window._dynChoiceAck[c.l]) window._dynChoiceAck[c.l] = 'Thank you for sharing that. God sees exactly how you feel, and He cares so much about you.'; });
   } else {
     var writePh = ui ? ui.write_ph : 'Write here\u2026';
     var crisis  = ui ? ui.crisis   : 'If you are carrying something heavy that feels too big to hold alone, please talk to a trusted adult or your youth minister.';
     rEl.innerHTML = '<div class="journal-area">'
       + '<p class="journal-prompt">' + (q.prompt || writePh) + '</p>'
       + '<textarea class="journal-ta" placeholder="' + writePh + '" aria-label="Your response" rows="4" data-jkey="' + jk + '"></textarea>'
+      + '<button onclick="submitJournalResponse()" style="width:100%;margin-top:10px;background:#4A7C59;color:#fff;border:none;border-radius:30px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;">Share with Soar \uD83D\uDD4A\uFE0F</button>'
+      + '<div id="soar-response-card" style="display:none;"></div>'
       + (age === 'soar' ? '<p id="crisis-note">' + crisis + '</p>' : '')
       + '</div>';
     setTimeout(function(){
@@ -2526,6 +2527,56 @@ console.log('SPARROW Jr. Dynamic Content Engine loaded. Bible-only. Age-guarded.
 
 
 })();
+
+function submitJournalResponse() {
+  var ta = document.querySelector('#step-o .journal-ta');
+  if (!ta || !ta.value.trim()) return;
+  var response = ta.value.trim();
+  var topicName = TOPIC ? TOPIC.name : 'this topic';
+  var age = AGE || 'rise';
+
+  // Show loading state
+  var card = document.getElementById('soar-response-card');
+  if (!card) return;
+  card.style.display = 'block';
+  card.style.cssText = 'display:block;background:#F0F7F0;border-left:3px solid #4A7C59;border-radius:0 12px 12px 0;padding:14px 16px;margin-top:12px;animation:fadeUp .3s ease both;';
+  card.innerHTML = '<p style="font-size:13px;color:#4A7C59;font-style:italic;">Soar is listening\u2026 \uD83D\uDD4A\uFE0F</p>';
+
+  var ageDesc = age === 'nest' ? 'a 4-7 year old child' : age === 'rise' ? 'an 8-12 year old child' : 'a 13-17 year old teenager';
+  var prompt = 'A child is working through a Bible lesson about: ' + topicName + '.\n\n'
+    + 'They are ' + ageDesc + '. They just wrote this response to the reflection question:\n\n'
+    + '"' + response + '"\n\n'
+    + 'As Soar, a gentle faith companion, give a warm encouraging 2-3 sentence response. '
+    + 'Never say right or wrong. Affirm their honesty. Gently connect their feeling to God\u2019s love or the Bible story. '
+    + 'End with one sentence of hope or encouragement. '
+    + 'Speak directly to the child. Be warm, brief, and age-appropriate. Plain text only.';
+
+  var origin = window.location.origin;
+  var url = (origin && origin !== 'null' && origin.startsWith('http'))
+    ? origin + '/.netlify/functions/anthropic'
+    : '/.netlify/functions/anthropic';
+
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 200,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    var text = data.content && data.content[0] && data.content[0].text
+      ? data.content[0].text.trim()
+      : 'Thank you for sharing that. God sees your heart, and He is so glad you are here today.';
+    card.innerHTML = '<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;"><strong style="color:#4A7C59;">\uD83D\uDD4A\uFE0F Soar:</strong> ' + text + '</p>';
+    if (TTS && TTS.speakDirect) setTimeout(function(){ TTS.speakDirect(text); }, 300);
+  })
+  .catch(function(){
+    card.innerHTML = '<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;"><strong style="color:#4A7C59;">\uD83D\uDD4A\uFE0F Soar:</strong> Thank you for sharing that. God sees your heart, and He is so glad you are here today. Keep going \u2014 the next step is waiting for you.</p>';
+  });
+}
 </script>
 </body>
 </html>
