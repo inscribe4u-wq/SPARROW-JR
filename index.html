@@ -7,8 +7,6 @@
 <meta name="apple-mobile-web-app-title" content="SPARROW Jr.">
 <meta name="theme-color" content="#3A7D44">
 <meta name="description" content="SPARROW Jr. — A children's faith companion by Inscribe4u. Seek · Open · Act · Respond">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="manifest" href="manifest.json">
 <title>SPARROW Jr. — Meet God in the Moment</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -136,29 +134,14 @@ textarea,input{font-family:inherit;}
   box-shadow:var(--sh-soft);cursor:pointer;
   font-family:inherit;font-size:inherit;text-align:left;
   -webkit-tap-highlight-color:transparent;
-  transition:border-color 0.18s ease,background 0.18s ease;
+  transition:border-color 0.15s,background 0.15s;
 }
-.lib-card:active,.lib-card:focus{
-  border-color:var(--forest);
-  background:rgba(85,107,87,0.05);
-  outline:none;
-}
-.lib-icon{
-  width:68px;min-width:68px;padding:18px 0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;background:rgba(85,107,87,0.08);
-  pointer-events:none;
-}
-.lib-body{padding:16px 14px;flex:1;pointer-events:none;}
-.lib-title{
-  font-family:var(--font-d);font-size:17px;
-  color:var(--forest);font-weight:600;margin-bottom:3px;
-}
+.lib-card:active{border-color:var(--forest);background:rgba(85,107,87,0.05);}
+.lib-icon{width:66px;min-width:66px;padding:18px 0;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(85,107,87,0.08);}
+.lib-body{padding:16px 14px;flex:1;}
+.lib-title{font-family:var(--font-d);font-size:17px;color:var(--forest);font-weight:600;margin-bottom:3px;}
 .lib-desc{font-size:13px;color:rgba(30,58,47,0.6);line-height:1.4;}
-.lib-arrow{
-  padding-right:16px;font-size:22px;
-  color:var(--sage);pointer-events:none;
-}
+.lib-arrow{padding-right:16px;font-size:22px;color:var(--sage);}
 #screen-topics{background:var(--beige);}
 .topics-hdr{background:var(--forest);padding:44px 22px 32px;position:relative;overflow:hidden;}
 .topics-hdr::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:30px;background:var(--beige);border-radius:30px 30px 0 0;}
@@ -403,10 +386,24 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
   <div id="skyCanvas" style="position:absolute;inset:0;pointer-events:none;" aria-hidden="true"></div>
   <div id="birdCanvas" style="position:absolute;top:0;left:0;right:0;height:55%;pointer-events:none;" aria-hidden="true"></div>
   <div class="welcome-wrap">
-    <div class="logo-mark" id="logoMark"
-      onclick="this.classList.add('flap');var me=this;setTimeout(function(){me.classList.remove('flap');},700);"
-      role="button" aria-label="SPARROW Jr." tabindex="0">
-      <img src="icon-192.png" alt="SPARROW" style="width:120px;height:120px;object-fit:contain;display:block;" />
+    <div class="logo-mark" id="logoMark" aria-hidden="true"
+      onclick="this.classList.add('flap');var me=this;setTimeout(function(){me.classList.remove('flap');},700);">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="22" cy="28" rx="10" ry="7" fill="white" opacity="0.95"/>
+        <circle cx="32" cy="20" r="6" fill="white" opacity="0.95"/>
+        <path d="M37 19 L42 20 L37 22 Z" fill="white" opacity="0.8"/>
+        <circle cx="34" cy="19" r="1.2" fill="#556B57"/>
+        <path d="M22 26 Q12 16 8 20 Q14 22 18 27 Z" fill="white" opacity="0.85"/>
+        <path d="M12 30 Q10 36 14 35 Q13 31 16 30 Q14 34 18 34 Q17 30 20 29 Z" fill="white" opacity="0.75"/>
+        <line x1="20" y1="35" x2="18" y2="40" stroke="white" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>
+        <line x1="24" y1="35" x2="22" y2="40" stroke="white" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>
+        <line x1="18" y1="40" x2="15" y2="42" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+        <line x1="18" y1="40" x2="18" y2="43" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+        <line x1="18" y1="40" x2="21" y2="42" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+        <line x1="22" y1="40" x2="19" y2="42" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+        <line x1="22" y1="40" x2="22" y2="43" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+        <line x1="22" y1="40" x2="25" y2="42" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+      </svg>
     </div>
     <h1 class="welcome-title">SPARROW</h1>
     <p class="welcome-title-jr">Jr.</p>
@@ -418,7 +415,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         <div class="card-icon">🐣</div>
         <div class="card-body">
           <div class="card-range">Ages 4 – 7</div>
-          <div class="card-name">Little Wings</div>
+          <div class="card-name">Nestlings</div>
           <div class="card-desc">Safe in the nest · With a grown-up</div>
         </div>
         <div class="card-arrow">›</div>
@@ -451,7 +448,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
 ══════════════════════════════════════════ -->
 <section id="screen-library" class="screen" role="main" aria-label="Where would you like to start?">
   <div class="topics-hdr">
-    <button class="topics-back" onclick="goTo('screen-library')" aria-label="Back to library">← Back</button>
+    <button class="topics-back" onclick="goTo('screen-welcome')" aria-label="Back to home">← Back</button>
     <div class="topics-hdr-inner">
       <div class="topics-badge" id="library-badge">Ages 4–7 · Little Wings</div>
       <h2 class="topics-title">Where would you like to start?</h2>
@@ -488,7 +485,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
 
 <section id="screen-topics" class="screen" role="main" aria-label="Choose a topic">
   <div class="topics-hdr">
-    <button class="topics-back" onclick="goTo('screen-welcome')" aria-label="Back to home">← Back</button>
+    <button class="topics-back" onclick="goTo('screen-library')" aria-label="Back to library">← Back</button>
     <div class="topics-hdr-inner">
       <div class="topics-badge" id="topics-badge">Ages 4–7 · Nestlings</div>
       <h2 class="topics-title" id="topics-title-text">What's on your heart?</h2>
@@ -614,10 +611,10 @@ var TOPIC = null;
 var STEP  = 's';
 
 /* ── AGE MAP ─────────────────────────────────────────────── */
-var LIBRARY = 'emotion'; // emotion | journey | virtues
+var LIBRARY = "emotion"; // emotion | journey | virtues
 
 var AGE_MAP = {
-  nest:{badge:'Ages 4–7 · Little Wings',   prompt:'Tap the picture that feels most like you right now.', key:'young'},
+  nest:{badge:'Ages 4–7 · Nestlings',   prompt:'Tap the picture that feels most like you right now.', key:'young'},
   rise:{badge:'Ages 8–12 · Rising',     prompt:'Choose the topic that\'s on your heart today.',        key:'mid'},
   soar:{badge:'Ages 13–17 · Soaring',   prompt:'What\'s the hardest thing in your life right now?',    key:'teen'}
 };
@@ -865,7 +862,7 @@ var TOPICS = [
   }
 ];
 
-/* ── LIFE JOURNEY LIBRARY ────────────────────────────────────── */
+/* ── LIFE JOURNEY LIBRARY ── */
 var JOURNEY_TOPICS = [
   {id:"divorce",      name:"My Parents Are Divorcing",  emoji:"💔", delay:"0s"},
   {id:"addiction",    name:"A Parent Has a Problem",    emoji:"🌧️", delay:"0.1s"},
@@ -886,7 +883,7 @@ var JOURNEY_TOPICS = [
   {id:"unforgivable", name:"I Feel Unforgivable",       emoji:"😔", delay:"1.6s"}
 ];
 
-/* ── BIBLICAL VIRTUES LIBRARY ────────────────────────────────── */
+/* ── BIBLICAL VIRTUES LIBRARY ── */
 var VIRTUES_TOPICS = [
   {id:"love",         name:"Love",         emoji:"❤️",  delay:"0s"},
   {id:"joy",          name:"Joy",          emoji:"🌟", delay:"0.08s"},
@@ -1532,15 +1529,18 @@ function setLang(lang) {
 
 var _bg0=buildGrid;
 buildGrid=function(){
+  // FIX 2: choose topic list based on LIBRARY
   var g=document.getElementById('topicsGrid');if(!g)return;g.innerHTML='';
-  var _src = LIBRARY==='journey' ? JOURNEY_TOPICS : LIBRARY==='virtues' ? VIRTUES_TOPICS : TOPICS;
-  console.log('[SPARROW] buildGrid LIBRARY='+LIBRARY+' count='+_src.length);
-  _src.forEach(function(t,i){
-    var nm = (LIBRARY==='emotion'&&LANG==='es'&&ES.topics[t.id]) ? ES.topics[t.id] : t.name;
-    var ref = t.verse ? ((LANG==='es'&&ES.data&&ES.data[t.id]) ? ES.data[t.id].verse.ref : t.verse.ref) : '';
+  var _list = LIBRARY==='journey' ? JOURNEY_TOPICS :
+              LIBRARY==='virtues' ? VIRTUES_TOPICS : TOPICS;
+  console.log('[SPARROW] buildGrid LIBRARY='+LIBRARY+' count='+_list.length);
+  _list.forEach(function(t,i){
+    var nm=(LIBRARY==='emotion'&&LANG==='es'&&ES.topics[t.id])?ES.topics[t.id]:t.name;
+    var ref=t.verse?((LANG==='es'&&ES.data&&ES.data[t.id])?ES.data[t.id].verse.ref:t.verse.ref):'';
     var btn=document.createElement('button');btn.className='topic-tile';
     btn.setAttribute('role','listitem');btn.setAttribute('aria-label',nm);
     btn.style.setProperty('--td',(0.05+i*0.055)+'s');
+    btn.style.setProperty('--delay',t.delay||'0s');
     btn.innerHTML='<span class="topic-emoji" style="--td:'+(t.delay||'0s')+'">'+t.emoji+'</span><span class="topic-name">'+nm+'</span>'+(ref?'<span class="topic-ref">'+ref+'</span>':'');
     btn.onclick=(function(id){return function(){selectTopic(id);};})(t.id);
     g.appendChild(btn);
@@ -1559,47 +1559,36 @@ selectAge=function(age){
     var tb2=document.getElementById('topics-badge');if(tb2)tb2.textContent=m.badge;
     var tp2=document.getElementById('topics-prompt');if(tp2)tp2.textContent=m.prompt;
   }
-  // v1.0 Stabilization: always go to library first
+  // FIX 1: go to library selector, not directly to topics
   console.log('[SPARROW] selectAge:', age);
-  var lb = document.getElementById('library-badge');
-  if(lb) lb.textContent = (LANG==='es'&&ES.ui) ?
+  var _lb = document.getElementById('library-badge');
+  if (_lb) _lb.textContent = (LANG==='es'&&ES.ui) ?
     ({nest:ES.ui.nest_badge,rise:ES.ui.rise_badge,soar:ES.ui.soar_badge}[age]||AGE_MAP[age].badge) :
     AGE_MAP[age].badge;
   goTo('screen-library');
 };
 
-
-/* ── v1.0 STABILIZATION: selectLibrary ────────────────────────
-   Sets LIBRARY, updates the topics screen header text,
-   calls buildGrid, and navigates to screen-topics.
-─────────────────────────────────────────────────────────────── */
+/* ── selectLibrary: sets LIBRARY, builds grid, goes to topics ── */
 function selectLibrary(lib) {
   console.log('[SPARROW] selectLibrary:', lib);
   LIBRARY = lib;
   var m = AGE_MAP[AGE];
-
-  // Update topics header badge
   var badge = document.getElementById('topics-badge');
-  if (badge) badge.textContent = (LANG==='es'&&ES.ui) ?
-    ({nest:ES.ui.nest_badge,rise:ES.ui.rise_badge,soar:ES.ui.soar_badge}[AGE]||m.badge) : m.badge;
-
-  // Update topics title and prompt
   var titleEl = document.getElementById('topics-title-text');
   var promptEl = document.getElementById('topics-prompt');
+  if (badge) badge.textContent = (LANG==='es'&&ES.ui) ?
+    ({nest:ES.ui.nest_badge,rise:ES.ui.rise_badge,soar:ES.ui.soar_badge}[AGE]||m.badge) : m.badge;
   if (lib === 'emotion') {
-    if (titleEl) titleEl.textContent = (LANG==='es') ? "¿Qué hay en tu corazón?" : "What's on your heart?";
+    if (titleEl) titleEl.textContent = LANG==='es' ? "¿Qué hay en tu corazón?" : "What's on your heart?";
     if (promptEl) promptEl.textContent = (LANG==='es'&&ES.ui) ?
       ({nest:ES.ui.nest_prompt,rise:ES.ui.rise_prompt,soar:ES.ui.soar_prompt}[AGE]||m.prompt) : m.prompt;
   } else if (lib === 'journey') {
     if (titleEl) titleEl.textContent = "What's happening in your life?";
-    if (promptEl) promptEl.textContent = (AGE==='nest') ?
-      'Tap what is happening for you.' : 'Choose the situation that fits best.';
+    if (promptEl) promptEl.textContent = 'Choose the situation that fits best.';
   } else if (lib === 'virtues') {
     if (titleEl) titleEl.textContent = 'Who do you want to grow in being?';
-    if (promptEl) promptEl.textContent = (AGE==='nest') ?
-      'Tap something you want to grow in.' : 'Choose a virtue you want to grow in.';
+    if (promptEl) promptEl.textContent = 'Choose a virtue you want to grow in.';
   }
-
   buildGrid();
   goTo('screen-topics');
 }
@@ -1773,22 +1762,22 @@ var TOPIC_META = {
 
   /* ── LIFE JOURNEY ── */
   divorce:{anchorVerses:["Psalm 46:1","Deuteronomy 31:6","Psalm 27:10","Romans 8:38-39"],bibleCharacters:["Joseph through family betrayal (Genesis 37-50)","Naomi after loss (Ruth 1)"],guardrails:["Never assign blame to either parent","Anchor in God's unchanging presence","Always encourage child to talk to a trusted adult"],grief_topic:true},
-  addiction:{anchorVerses:["Psalm 34:18","Isaiah 41:10","Psalm 46:1","Romans 8:28"],bibleCharacters:["Joseph with broken family (Genesis 37-50)","Elijah in burnout (1 Kings 19)"],guardrails:["Never suggest child can fix parent","Always point to trusted adult","Never promise parent will recover"],grief_topic:false},
+  addiction:{anchorVerses:["Psalm 34:18","Isaiah 41:10","Psalm 46:1","Romans 8:28"],bibleCharacters:["Joseph with broken family (Genesis 37-50)","Elijah in burnout (1 Kings 19)"],guardrails:["Never suggest child can fix parent","Always point to trusted adult"],grief_topic:false},
   incarcerated:{anchorVerses:["Psalm 27:10","Isaiah 49:15-16","Romans 8:38-39"],bibleCharacters:["Joseph in prison (Genesis 39-40)","Paul in prison (Philippians 4)"],guardrails:["Never shame the child","Always point to trusted adult"],grief_topic:false},
   death:{anchorVerses:["Psalm 34:18","John 11:35","Revelation 21:4","Romans 8:38-39"],bibleCharacters:["Jesus weeping at Lazarus's tomb (John 11)","Naomi after loss (Ruth 1)"],guardrails:["CRITICAL: Never state where the deceased is now","Never say in heaven watching over the child","Comfort must be toward the living child"],grief_topic:true},
-  blended:{anchorVerses:["Psalm 46:1","Romans 15:7","Ephesians 4:2","Colossians 3:13"],bibleCharacters:["Joseph navigating family tension (Genesis 37-50)","Ruth in a changed family (Ruth 1-4)"],guardrails:["Never take sides","Validate difficulty of change"],grief_topic:false},
+  blended:{anchorVerses:["Psalm 46:1","Romans 15:7","Ephesians 4:2"],bibleCharacters:["Joseph navigating family tension (Genesis 37-50)","Ruth in a changed family (Ruth 1-4)"],guardrails:["Never take sides","Validate difficulty of change"],grief_topic:false},
   bullying:{anchorVerses:["Psalm 34:18","Romans 12:21","1 Samuel 17","Isaiah 43:1"],bibleCharacters:["David facing Goliath (1 Samuel 17)","Joseph mocked by brothers (Genesis 37)"],guardrails:["CRITICAL: Always direct child to trusted adult","Never suggest child deserved it"],grief_topic:false},
-  peerpressure:{anchorVerses:["Romans 12:2","Daniel 1:8","Proverbs 13:20","Galatians 1:10"],bibleCharacters:["Daniel refusing king's food (Daniel 1)","Shadrach Meshach and Abednego (Daniel 3)"],guardrails:["Never shame child for feeling pressure","Anchor courage in God's presence"],grief_topic:false},
-  invisible:{anchorVerses:["Isaiah 43:1","Psalm 139:1-4","John 4:7-26"],bibleCharacters:["Hagar seen by God (Genesis 16)","Zacchaeus noticed by Jesus (Luke 19)"],guardrails:["Never suggest invisibility is child's fault","Anchor in God's care"],grief_topic:false},
+  peerpressure:{anchorVerses:["Romans 12:2","Daniel 1:8","Proverbs 13:20","Galatians 1:10"],bibleCharacters:["Daniel refusing king's food (Daniel 1)","Shadrach Meshach and Abednego (Daniel 3)"],guardrails:["Never shame child for feeling pressure"],grief_topic:false},
+  invisible:{anchorVerses:["Isaiah 43:1","Psalm 139:1-4","John 4:7-26"],bibleCharacters:["Hagar seen by God (Genesis 16)","Zacchaeus noticed by Jesus (Luke 19)"],guardrails:["Never suggest invisibility is child's fault"],grief_topic:false},
   romantc:{anchorVerses:["Proverbs 4:23","1 Corinthians 13:4-7","Psalm 119:9"],bibleCharacters:["Joseph guarding his heart (Genesis 39)"],guardrails:["Never shame feelings","Point to a trusted adult"],grief_topic:false},
-  socialmedia:{anchorVerses:["Romans 12:2","Philippians 4:8","Psalm 139:14"],bibleCharacters:["Elijah comparing himself (1 Kings 19)","Paul learning contentment (Philippians 4)"],guardrails:["Address harm of comparison","Anchor identity in God's view"],grief_topic:false},
+  socialmedia:{anchorVerses:["Romans 12:2","Philippians 4:8","Psalm 139:14"],bibleCharacters:["Elijah comparing himself (1 Kings 19)","Paul learning contentment (Philippians 4)"],guardrails:["Address harm of comparison"],grief_topic:false},
   identity:{anchorVerses:["Genesis 1:27","Psalm 139:13-14","Isaiah 43:1","Jeremiah 1:5"],bibleCharacters:["God forming humanity in His image (Genesis 1-2)","Jeremiah called before birth (Jeremiah 1)"],guardrails:["CRITICAL: warm never condemning","CRITICAL: anchor in Scripture only","CRITICAL: never express cultural opinion","For gender identity anchor in God as Creator","Never shame","Always point to trusted Christian adult"],grief_topic:false},
   bodyimage:{anchorVerses:["Psalm 139:14","1 Samuel 16:7","Genesis 1:31"],bibleCharacters:["God declaring creation very good (Genesis 1)","David fearfully and wonderfully made (Psalm 139)"],guardrails:["Never make physical comparisons","Anchor worth in God's design"],grief_topic:false},
-  moving:{anchorVerses:["Deuteronomy 31:8","Joshua 1:9","Psalm 46:1"],bibleCharacters:["Abraham called to unknown place (Genesis 12)","Ruth leaving everything familiar (Ruth 1)"],guardrails:["Validate grief of leaving","Anchor in God going before them"],grief_topic:false},
+  moving:{anchorVerses:["Deuteronomy 31:8","Joshua 1:9","Psalm 46:1"],bibleCharacters:["Abraham called to unknown place (Genesis 12)","Ruth leaving everything familiar (Ruth 1)"],guardrails:["Validate grief of leaving"],grief_topic:false},
   military:{anchorVerses:["Deuteronomy 31:8","Isaiah 43:2","Joshua 1:9"],bibleCharacters:["Abraham moving repeatedly (Genesis 12-25)","Paul content in all circumstances (Philippians 4)"],guardrails:["Honor family service","Validate unique loneliness of military transitions"],grief_topic:false},
-  whybadthings:{anchorVerses:["Romans 8:28","Habakkuk 1:2-3","Psalm 22:1-2","John 16:33"],bibleCharacters:["Habakkuk questioning God (Habakkuk 1-3)","Job in his suffering (Job 1-3)"],guardrails:["CRITICAL: Never say everything happens for a reason","Be honest Scripture does not always explain why"],grief_topic:false},
-  prayerworks:{anchorVerses:["Philippians 4:6","1 John 5:14-15","Psalm 34:17"],bibleCharacters:["Hannah pouring out her heart (1 Samuel 1)","Paul praying three times (2 Corinthians 12:7-9)"],guardrails:["CRITICAL: Never promise God always answers as we ask","Never suggest unanswered prayer means weak faith"],grief_topic:false},
-  unforgivable:{anchorVerses:["1 John 1:9","Romans 8:1","Psalm 103:12"],bibleCharacters:["Peter's denial and restoration (John 21)","The prodigal son (Luke 15:11-32)"],guardrails:["CRITICAL: Never suggest any sin is beyond God's forgiveness","Anchor in Christ's finished work"],grief_topic:false},
+  whybadthings:{anchorVerses:["Romans 8:28","Habakkuk 1:2-3","Psalm 22:1-2"],bibleCharacters:["Habakkuk questioning God (Habakkuk 1-3)","Job in his suffering (Job 1-3)"],guardrails:["CRITICAL: Never say everything happens for a reason"],grief_topic:false},
+  prayerworks:{anchorVerses:["Philippians 4:6","1 John 5:14-15","Psalm 34:17"],bibleCharacters:["Hannah pouring out her heart (1 Samuel 1)","Paul praying three times (2 Corinthians 12:7-9)"],guardrails:["CRITICAL: Never promise God always answers as we ask"],grief_topic:false},
+  unforgivable:{anchorVerses:["1 John 1:9","Romans 8:1","Psalm 103:12"],bibleCharacters:["Peter's denial and restoration (John 21)","The prodigal son (Luke 15:11-32)"],guardrails:["CRITICAL: Never suggest any sin is beyond God's forgiveness"],grief_topic:false},
 
   /* ── BIBLICAL VIRTUES ── */
   love:{anchorVerses:["1 Corinthians 13:4-7","John 13:34-35","Romans 5:8"],bibleCharacters:["Jesus washing feet (John 13)","The good Samaritan (Luke 10)"],guardrails:["Ground love in Christ's sacrificial love first"],grief_topic:false},
@@ -2394,36 +2383,29 @@ function populateDynamic(session, topicId, age, lang) {
    3. On success: populate and navigate
    4. On failure: fall back to fixed content silently
 ─────────────────────────────────────────────────────────────── */
-/* ── v1.0 STABILIZATION: selectTopic searches all three libraries ── */
 var _selectTopic_orig = selectTopic;
 selectTopic = function(id) {
-  console.log('[SPARROW] selectTopic:', id, 'LIBRARY:', LIBRARY);
-
-  // Search TOPICS, JOURNEY_TOPICS, and VIRTUES_TOPICS
+  // FIX 3: search all three topic libraries
   TOPIC = null;
-  var _allTopics = TOPICS.concat(JOURNEY_TOPICS).concat(VIRTUES_TOPICS);
-  for (var i = 0; i < _allTopics.length; i++) {
-    if (_allTopics[i].id === id) { TOPIC = _allTopics[i]; break; }
+  var _all = TOPICS.concat(JOURNEY_TOPICS).concat(VIRTUES_TOPICS);
+  for (var i = 0; i < _all.length; i++) {
+    if (_all[i].id === id) { TOPIC = _all[i]; break; }
   }
-  if (!TOPIC) {
-    console.log('[SPARROW] selectTopic: topic not found for id=', id);
-    return;
-  }
-  console.log('[SPARROW] topic found:', TOPIC.name, '| source:', LIBRARY);
+  console.log('[SPARROW] selectTopic:', id, 'found:', TOPIC ? TOPIC.name : 'NULL');
+  if (!TOPIC) return;
 
   STEP = 's';
   resetSteps();
   goTo('screen-daily');
   ann('You chose: ' + TOPIC.name + '. Getting your session ready.');
 
-  // ALL topics use AI generation — emotion topics have local fallback,
-  // journey and virtues topics have AI-only content
+  // All topics go through the AI — emotion topics have local fallback
   showLoadingOverlay(AGE, id, LANG);
-  console.log('[SPARROW] calling fetchDynamicSession for:', id);
+  console.log('[SPARROW] calling Anthropic function for:', id);
 
   fetchDynamicSession(id, AGE, LANG,
     function(session) {
-      console.log('[SPARROW] AI session received for:', id);
+      console.log('[SPARROW] session received for:', id);
       hideLoadingOverlay();
       populateDynamic(session, id, AGE, LANG);
       ann('Your session is ready.');
@@ -2432,36 +2414,21 @@ selectTopic = function(id) {
       }
     },
     function(err) {
-      console.log('[SPARROW] AI fallback for:', id, 'error:', err);
+      console.log('[SPARROW] fallback for:', id, err);
       hideLoadingOverlay();
-      // Emotion topics have local fallback content
-      // Journey/Virtues topics show a gentle message
-      var inTOPICS = false;
-      for (var j = 0; j < TOPICS.length; j++) {
-        if (TOPICS[j].id === id) { inTOPICS = true; break; }
-      }
-      if (inTOPICS) {
-        showFallbackNotice(AGE, LANG);
+      showFallbackNotice(AGE, LANG);
+      // Emotion topics have local content as fallback
+      var _inEmotion = false;
+      for (var j=0; j<TOPICS.length; j++) { if(TOPICS[j].id===id){_inEmotion=true;break;} }
+      if (_inEmotion) {
         if (LANG === 'es') {
           var esT = ES && ES.data && ES.data[id];
           if (esT) { populate(); } else { _selectTopic_orig(id); }
         } else {
           populate();
         }
-      } else {
-        // Journey or Virtues — show a gentle offline message
-        showFallbackNotice(AGE, LANG);
-        var offlineMsg = LANG === 'es'
-          ? 'Necesitas conexión a internet para este tema. Por favor intenta de nuevo.'
-          : 'This topic needs an internet connection. Please try again when you are online.';
-        var daily = document.getElementById('screen-daily');
-        if (daily) {
-          var msg = document.createElement('div');
-          msg.style.cssText = 'padding:32px 22px;text-align:center;font-family:var(--font-d);font-size:16px;color:var(--forest);line-height:1.6;';
-          msg.textContent = offlineMsg;
-          daily.insertBefore(msg, daily.firstChild);
-        }
       }
+      // Journey/Virtues: fallback notice already shown, session stays on loading screen
     }
   );
 };
