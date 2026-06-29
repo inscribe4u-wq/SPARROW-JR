@@ -83,15 +83,15 @@ textarea,input{font-family:inherit;}
 .sky-particle{position:absolute;border-radius:50%;pointer-events:none;animation:twinkle var(--dur,3s) ease-in-out infinite var(--delay,0s);}
 .bird-wrap{position:absolute;pointer-events:none;animation:soarBird linear infinite var(--dur,22s) var(--delay,0s);opacity:0;}
 .logo-mark{
-  width:140px;height:140px;
-  background:transparent;
+  width:100px;height:100px;
+  background:linear-gradient(135deg,var(--gold),#e8c280);
   border-radius:50%;display:flex;align-items:center;justify-content:center;
-  margin:0 auto 16px;
+  margin:0 auto 20px;
   animation:pulseLogo 3s ease-in-out infinite,bounceIn 0.75s cubic-bezier(0.34,1.56,0.64,1) both;
   cursor:pointer;position:relative;z-index:2;
 }
 .logo-mark.flap{animation:wingFlap 0.65s ease-in-out,pulseLogo 3s 0.65s ease-in-out infinite;}
-.logo-img{width:140px;height:140px;object-fit:contain;display:block;}
+.logo-mark svg{width:56px;height:56px;}
 .welcome-wrap{position:relative;z-index:2;text-align:center;max-width:460px;width:100%;}
 .welcome-title{font-family:var(--font-d);font-size:clamp(48px,13vw,78px);font-weight:700;color:var(--forest);letter-spacing:0.1em;line-height:1;margin-bottom:4px;animation:fadeUp 0.6s 0.2s both;}
 .welcome-title-jr{font-family:var(--font-d);font-size:clamp(18px,5vw,26px);font-weight:400;color:var(--gold-dk);letter-spacing:0.06em;line-height:1;margin-bottom:12px;animation:fadeUp 0.6s 0.3s both;}
@@ -130,19 +130,35 @@ textarea,input{font-family:inherit;}
 ════════════════════════════════════════════════ */
 #screen-library{background:var(--beige);}
 .lib-card{
-  background:var(--white);border-radius:var(--r-md);padding:0;text-align:left;
-  display:flex;align-items:center;overflow:hidden;
-  box-shadow:var(--sh-soft);border:2px solid transparent;
-  cursor:pointer;transition:all 0.22s ease;
-  opacity:1;position:relative;z-index:1;
-  -webkit-tap-highlight-color:rgba(85,107,87,0.2);
+  display:flex;align-items:center;width:100%;padding:0;
+  background:var(--white);border-radius:var(--r-md);
+  border:2px solid transparent;overflow:hidden;
+  box-shadow:var(--sh-soft);cursor:pointer;
+  font-family:inherit;font-size:inherit;text-align:left;
+  -webkit-tap-highlight-color:transparent;
+  transition:border-color 0.18s ease,background 0.18s ease;
 }
-.lib-card:active{transform:scale(0.97);background:rgba(85,107,87,0.05);}
-.lib-icon{width:72px;padding:18px 0;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;background:rgba(85,107,87,0.08);pointer-events:none;}
-.lib-body{padding:18px 14px;flex:1;pointer-events:none;}
-.lib-title{font-family:var(--font-d);font-size:18px;color:var(--forest);font-weight:600;margin-bottom:3px;}
-.lib-desc{font-size:13px;color:rgba(30,58,47,0.65);line-height:1.4;}
-.lib-arrow{padding-right:18px;font-size:22px;color:var(--sage);pointer-events:none;}
+.lib-card:active,.lib-card:focus{
+  border-color:var(--forest);
+  background:rgba(85,107,87,0.05);
+  outline:none;
+}
+.lib-icon{
+  width:68px;min-width:68px;padding:18px 0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;background:rgba(85,107,87,0.08);
+  pointer-events:none;
+}
+.lib-body{padding:16px 14px;flex:1;pointer-events:none;}
+.lib-title{
+  font-family:var(--font-d);font-size:17px;
+  color:var(--forest);font-weight:600;margin-bottom:3px;
+}
+.lib-desc{font-size:13px;color:rgba(30,58,47,0.6);line-height:1.4;}
+.lib-arrow{
+  padding-right:16px;font-size:22px;
+  color:var(--sage);pointer-events:none;
+}
 #screen-topics{background:var(--beige);}
 .topics-hdr{background:var(--forest);padding:44px 22px 32px;position:relative;overflow:hidden;}
 .topics-hdr::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:30px;background:var(--beige);border-radius:30px 30px 0 0;}
@@ -389,8 +405,8 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
   <div class="welcome-wrap">
     <div class="logo-mark" id="logoMark"
       onclick="this.classList.add('flap');var me=this;setTimeout(function(){me.classList.remove('flap');},700);"
-      role="button" aria-label="SPARROW Jr. — tap to begin" tabindex="0">
-      <img src="icon-192.png" alt="SPARROW" class="logo-img" />
+      role="button" aria-label="SPARROW Jr." tabindex="0">
+      <img src="icon-192.png" alt="SPARROW" style="width:120px;height:120px;object-fit:contain;display:block;" />
     </div>
     <h1 class="welcome-title">SPARROW</h1>
     <p class="welcome-title-jr">Jr.</p>
@@ -398,7 +414,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
     <p class="welcome-tag">A children's faith companion that grows with you<br>and meets you in Scripture, reflection, action, and prayer.</p>
     <p class="age-label">Who is reading today?</p>
     <div class="age-cards" role="group" aria-label="Select age group">
-      <button class="age-card card-nest" onclick="selectAge('nest')" aria-label="Ages 4 to 7, Little Wings">
+      <button class="age-card card-nest" onclick="selectAge('nest')" aria-label="Ages 4 to 7, Nestlings">
         <div class="card-icon">🐣</div>
         <div class="card-body">
           <div class="card-range">Ages 4 – 7</div>
@@ -431,19 +447,19 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
 </section>
 
 <!-- ══════════════════════════════════════════
-     SCREEN 2 — LIBRARY SELECTOR
+     SCREEN 2 — TOPICS
 ══════════════════════════════════════════ -->
-<section id="screen-library" class="screen" role="main" aria-label="Choose how to start">
+<section id="screen-library" class="screen" role="main" aria-label="Where would you like to start?">
   <div class="topics-hdr">
-    <button class="topics-back" onclick="goTo('screen-welcome')" aria-label="Back to home">← Back</button>
+    <button class="topics-back" onclick="goTo('screen-library')" aria-label="Back to library">← Back</button>
     <div class="topics-hdr-inner">
       <div class="topics-badge" id="library-badge">Ages 4–7 · Little Wings</div>
       <h2 class="topics-title">Where would you like to start?</h2>
       <p class="topics-prompt">Choose how you want to come to God today.</p>
     </div>
   </div>
-  <div style="padding:24px 18px 40px;max-width:520px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:14px;">
-    <button class="lib-card" onclick="selectLibrary('emotion')" aria-label="How I Feel">
+  <div style="padding:24px 18px 48px;max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:14px;">
+    <button class="lib-card" onclick="selectLibrary('emotion')">
       <div class="lib-icon">💛</div>
       <div class="lib-body">
         <div class="lib-title">How I Feel</div>
@@ -451,7 +467,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
       </div>
       <div class="lib-arrow">›</div>
     </button>
-    <button class="lib-card" onclick="selectLibrary('journey')" aria-label="What Happened">
+    <button class="lib-card" onclick="selectLibrary('journey')">
       <div class="lib-icon">🌿</div>
       <div class="lib-body">
         <div class="lib-title">What Happened</div>
@@ -459,7 +475,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
       </div>
       <div class="lib-arrow">›</div>
     </button>
-    <button class="lib-card" onclick="selectLibrary('virtues')" aria-label="Who I Want to Be">
+    <button class="lib-card" onclick="selectLibrary('virtues')">
       <div class="lib-icon">✨</div>
       <div class="lib-body">
         <div class="lib-title">Who I Want to Be</div>
@@ -470,12 +486,9 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     SCREEN 3 — TOPICS
-══════════════════════════════════════════ -->
 <section id="screen-topics" class="screen" role="main" aria-label="Choose a topic">
   <div class="topics-hdr">
-    <button class="topics-back" onclick="goTo('screen-library')" aria-label="Back to library">← Back</button>
+    <button class="topics-back" onclick="goTo('screen-welcome')" aria-label="Back to home">← Back</button>
     <div class="topics-hdr-inner">
       <div class="topics-badge" id="topics-badge">Ages 4–7 · Nestlings</div>
       <h2 class="topics-title" id="topics-title-text">What's on your heart?</h2>
@@ -601,14 +614,13 @@ var TOPIC = null;
 var STEP  = 's';
 
 /* ── AGE MAP ─────────────────────────────────────────────── */
+var LIBRARY = 'emotion'; // emotion | journey | virtues
+
 var AGE_MAP = {
   nest:{badge:'Ages 4–7 · Little Wings',   prompt:'Tap the picture that feels most like you right now.', key:'young'},
   rise:{badge:'Ages 8–12 · Rising',     prompt:'Choose the topic that\'s on your heart today.',        key:'mid'},
   soar:{badge:'Ages 13–17 · Soaring',   prompt:'What\'s the hardest thing in your life right now?',    key:'teen'}
 };
-
-var LIBRARY = 'emotion'; // emotion | journey | virtues
-
 
 /* ── TOPICS ─────────────────────────────────────────────── */
 var TOPICS = [
@@ -851,49 +863,48 @@ var TOPICS = [
      teen:"God, I'm not going to pretend I understand why people I love suffer. What I'm asking for right now is Your presence. Be what only You can be. Give me honest faith instead of performed faith. I trust You with what I cannot fix. Amen."
    }
   }
-]
+];
 
-/* ── LIFE JOURNEY LIBRARY ─────────────────────────────────── */
+/* ── LIFE JOURNEY LIBRARY ────────────────────────────────────── */
 var JOURNEY_TOPICS = [
-  {id:'divorce',      name:'My Parents Are Divorcing',  emoji:'💔', delay:'0s'},
-  {id:'addiction',    name:'A Parent Has a Problem',    emoji:'🌧️', delay:'0.1s'},
-  {id:'incarcerated', name:'A Parent Is in Prison',     emoji:'🔒', delay:'0.2s'},
-  {id:'death',        name:'Someone I Love Died',       emoji:'🕊️', delay:'0.3s'},
-  {id:'blended',      name:'My Family Is Changing',     emoji:'🏠', delay:'0.4s'},
-  {id:'bullying',     name:'I Am Being Bullied',        emoji:'🛡️', delay:'0.5s'},
-  {id:'peerpressure', name:'My Friends Want Me To',     emoji:'😬', delay:'0.6s'},
-  {id:'invisible',    name:'Nobody Sees Me',            emoji:'👻', delay:'0.7s'},
-  {id:'romantc',      name:'I Have Confusing Feelings', emoji:'💭', delay:'0.8s'},
-  {id:'socialmedia',  name:'Social Media Is Hard',      emoji:'📱', delay:'0.9s'},
-  {id:'identity',     name:'Who Am I Really?',          emoji:'🪞', delay:'1.0s'},
-  {id:'bodyimage',    name:'I Don\'t Like How I Look', emoji:'🌱', delay:'1.1s'},
-  {id:'moving',       name:'I Am Moving / New School',  emoji:'📦', delay:'1.2s'},
-  {id:'military',     name:'My Family Moves a Lot',     emoji:'✈️', delay:'1.3s'},
-  {id:'whybadthings', name:'Why Do Bad Things Happen?', emoji:'❓', delay:'1.4s'},
-  {id:'prayerworks',  name:'Does God Hear Me?',         emoji:'🙏', delay:'1.5s'},
-  {id:'unforgivable', name:'I Feel Unforgivable',       emoji:'😔', delay:'1.6s'}
+  {id:"divorce",      name:"My Parents Are Divorcing",  emoji:"💔", delay:"0s"},
+  {id:"addiction",    name:"A Parent Has a Problem",    emoji:"🌧️", delay:"0.1s"},
+  {id:"incarcerated", name:"A Parent Is in Prison",     emoji:"🔒", delay:"0.2s"},
+  {id:"death",        name:"Someone I Love Died",       emoji:"🕊️", delay:"0.3s"},
+  {id:"blended",      name:"My Family Is Changing",     emoji:"🏠", delay:"0.4s"},
+  {id:"bullying",     name:"I Am Being Bullied",        emoji:"🛡️", delay:"0.5s"},
+  {id:"peerpressure", name:"My Friends Want Me To",     emoji:"😬", delay:"0.6s"},
+  {id:"invisible",    name:"Nobody Sees Me",            emoji:"👻", delay:"0.7s"},
+  {id:"romantc",      name:"I Have Confusing Feelings", emoji:"💭", delay:"0.8s"},
+  {id:"socialmedia",  name:"Social Media Is Hard",      emoji:"📱", delay:"0.9s"},
+  {id:"identity",     name:"Who Am I Really?",          emoji:"🪞", delay:"1.0s"},
+  {id:"bodyimage",    name:"I Don't Like How I Look",   emoji:"🌱", delay:"1.1s"},
+  {id:"moving",       name:"I Am Moving / New School",  emoji:"📦", delay:"1.2s"},
+  {id:"military",     name:"My Family Moves a Lot",     emoji:"✈️", delay:"1.3s"},
+  {id:"whybadthings", name:"Why Do Bad Things Happen?", emoji:"❓", delay:"1.4s"},
+  {id:"prayerworks",  name:"Does God Hear Me?",         emoji:"🙏", delay:"1.5s"},
+  {id:"unforgivable", name:"I Feel Unforgivable",       emoji:"😔", delay:"1.6s"}
 ];
 
-/* ── BIBLICAL VIRTUES LIBRARY ─────────────────────────────── */
+/* ── BIBLICAL VIRTUES LIBRARY ────────────────────────────────── */
 var VIRTUES_TOPICS = [
-  {id:'love',         name:'Love',         emoji:'❤️',  delay:'0s'},
-  {id:'joy',          name:'Joy',          emoji:'🌟',  delay:'0.08s'},
-  {id:'peace',        name:'Peace',        emoji:'🕊️',  delay:'0.16s'},
-  {id:'patience',     name:'Patience',     emoji:'⏳',  delay:'0.24s'},
-  {id:'kindness',     name:'Kindness',     emoji:'🌸',  delay:'0.32s'},
-  {id:'goodness',     name:'Goodness',     emoji:'✅',  delay:'0.4s'},
-  {id:'faithfulness', name:'Faithfulness', emoji:'🏅',  delay:'0.48s'},
-  {id:'gentleness',   name:'Gentleness',   emoji:'🌿',  delay:'0.56s'},
-  {id:'selfcontrol',  name:'Self-Control', emoji:'💪',  delay:'0.64s'},
-  {id:'honesty',      name:'Honesty',      emoji:'📖',  delay:'0.72s'},
-  {id:'courage',      name:'Courage',      emoji:'🦁',  delay:'0.8s'},
-  {id:'humility',     name:'Humility',     emoji:'🙇',  delay:'0.88s'},
-  {id:'forgiveness',  name:'Forgiveness',  emoji:'🤝',  delay:'0.96s'},
-  {id:'generosity',   name:'Generosity',   emoji:'🎁',  delay:'1.04s'},
-  {id:'gratitude',    name:'Gratitude',    emoji:'🙏',  delay:'1.12s'},
-  {id:'wisdom',       name:'Wisdom',       emoji:'📜',  delay:'1.2s'}
+  {id:"love",         name:"Love",         emoji:"❤️",  delay:"0s"},
+  {id:"joy",          name:"Joy",          emoji:"🌟", delay:"0.08s"},
+  {id:"peace",        name:"Peace",        emoji:"🕊️", delay:"0.16s"},
+  {id:"patience",     name:"Patience",     emoji:"⏳", delay:"0.24s"},
+  {id:"kindness",     name:"Kindness",     emoji:"🌸", delay:"0.32s"},
+  {id:"goodness",     name:"Goodness",     emoji:"✅", delay:"0.4s"},
+  {id:"faithfulness", name:"Faithfulness", emoji:"🏅", delay:"0.48s"},
+  {id:"gentleness",   name:"Gentleness",   emoji:"🌿", delay:"0.56s"},
+  {id:"selfcontrol",  name:"Self-Control", emoji:"💪", delay:"0.64s"},
+  {id:"honesty",      name:"Honesty",      emoji:"📖", delay:"0.72s"},
+  {id:"courage",      name:"Courage",      emoji:"🦁", delay:"0.8s"},
+  {id:"humility",     name:"Humility",     emoji:"🙇", delay:"0.88s"},
+  {id:"forgiveness",  name:"Forgiveness",  emoji:"🤝", delay:"0.96s"},
+  {id:"generosity",   name:"Generosity",   emoji:"🎁", delay:"1.04s"},
+  {id:"gratitude",    name:"Gratitude",    emoji:"🙏", delay:"1.12s"},
+  {id:"wisdom",       name:"Wisdom",       emoji:"📜", delay:"1.2s"}
 ];
-;
 
 /* ── COMPLETION DATA ────────────────────────────────────────── */
 var COMP_VERSES = {
@@ -1049,80 +1060,32 @@ function burst(x,y,n){
 function ann(msg){var el=document.getElementById('a11y');if(el){el.textContent='';setTimeout(function(){el.textContent=msg;},50);}}
 function goTo(id){if(TTS&&TTS.stop)TTS.stop();document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var t=document.getElementById(id);if(t){t.classList.add('active');window.scrollTo(0,0);}}
 function selectAge(age){
-  AGE = age;
-  document.body.classList.toggle('nest-mode', age === 'nest');
-  var badge = document.getElementById('library-badge');
-  if(badge) badge.textContent = AGE_MAP[age].badge;
-  var screens = document.querySelectorAll('.screen');
-  for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
-  var s = document.getElementById('screen-library');
-  if(s){ s.classList.add('active'); window.scrollTo(0,0); }
-  // Block lib-card clicks for 500ms to prevent touch event ghost clicks
-  var cards = document.querySelectorAll('.lib-card');
-  for(var j=0;j<cards.length;j++){
-    cards[j].style.pointerEvents = 'none';
-  }
-  setTimeout(function(){
-    var cards2 = document.querySelectorAll('.lib-card');
-    for(var k=0;k<cards2.length;k++){
-      cards2[k].style.pointerEvents = '';
-    }
-  }, 500);
-}
-
-function selectLibrary(lib){
-  LIBRARY = lib;
-  var m = AGE_MAP[AGE];
-  var badge = document.getElementById('topics-badge');
-  var titleEl = document.getElementById('topics-title-text');
-  var promptEl = document.getElementById('topics-prompt');
-  if(badge) badge.textContent = m.badge;
-  if(lib === 'emotion'){
-    if(titleEl) titleEl.textContent = "What's on your heart?";
-    if(promptEl) promptEl.textContent = m.prompt;
-  } else if(lib === 'journey'){
-    if(titleEl) titleEl.textContent = "What's happening in your life?";
-    if(promptEl) promptEl.textContent = 'Choose the situation that fits best.';
-  } else if(lib === 'virtues'){
-    if(titleEl) titleEl.textContent = 'Who do you want to grow in being?';
-    if(promptEl) promptEl.textContent = 'Choose a virtue you want to grow in.';
-  }
+  AGE=age;
+  document.body.classList.toggle('nest-mode',age==='nest');
+  var m=AGE_MAP[age];
+  document.getElementById('topics-badge').textContent=m.badge;
+  document.getElementById('topics-prompt').textContent=m.prompt;
   buildGrid();
-  var screens = document.querySelectorAll('.screen');
-  for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
-  var s = document.getElementById('screen-topics');
-  if(s){ s.classList.add('active'); window.scrollTo(0,0); }
-  // Block topic tile clicks for 500ms to prevent ghost clicks
-  setTimeout(function(){
-    var tiles = document.querySelectorAll('.topic-tile');
-    for(var j=0;j<tiles.length;j++) tiles[j].style.pointerEvents = '';
-  }, 500);
+  goTo('screen-topics');
 }
-
 
 /* ── TOPICS GRID ────────────────────────────────────────────── */
 function buildGrid(){
-  var g = document.getElementById('topicsGrid');
-  if(!g) return;
-  g.innerHTML = '';
-  var list = LIBRARY==='journey' ? JOURNEY_TOPICS : LIBRARY==='virtues' ? VIRTUES_TOPICS : TOPICS;
-  for(var i=0;i<list.length;i++){
-    (function(t,idx){
-      var nm = (LIBRARY==='emotion' && LANG==='es' && ES.topics && ES.topics[t.id]) ? ES.topics[t.id] : t.name;
-      var ref = t.verse ? ((LANG==='es' && ES.data && ES.data[t.id]) ? ES.data[t.id].verse.ref : t.verse.ref) : '';
-      var btn = document.createElement('button');
-      btn.className = 'topic-tile';
-      btn.setAttribute('role','listitem');
-      btn.setAttribute('aria-label', nm);
-      btn.style.setProperty('--td',(0.05+idx*0.055)+'s');
-      btn.style.setProperty('--delay',t.delay||'0s');
-      btn.innerHTML = '<span class="topic-emoji" style="--td:'+(t.delay||'0s')+'">'+t.emoji+'</span>'
-        + '<span class="topic-name">'+nm+'</span>'
-        + (ref?'<span class="topic-ref">'+ref+'</span>':'');
-      btn.addEventListener('click', function(){ selectTopic(t.id); });
-      g.appendChild(btn);
-    })(list[i],i);
-  }
+  var g=document.getElementById('topicsGrid');
+  g.innerHTML='';
+  TOPICS.forEach(function(t,i){
+    var btn=document.createElement('button');
+    btn.className='topic-tile';
+    btn.setAttribute('role','listitem');
+    btn.setAttribute('aria-label',t.name+' — '+t.verse.ref);
+    btn.style.setProperty('--td',(0.05+i*0.055)+'s');
+    btn.style.setProperty('--delay',t.delay);
+    btn.innerHTML='<span class="topic-emoji" style="--td:'+t.delay+'">'+t.emoji+'</span>'
+      +'<span class="topic-name">'+t.name+'</span>'
+      +'<span class="topic-ref">'+t.verse.ref+'</span>';
+    btn.onclick=function(){selectTopic(t.id);};
+    g.appendChild(btn);
+  });
 }
 
 /* ── SELECT TOPIC ───────────────────────────────────────────── */
@@ -1569,49 +1532,77 @@ function setLang(lang) {
 
 var _bg0=buildGrid;
 buildGrid=function(){
-  var g = document.getElementById('topicsGrid');
-  if(!g) return;
-  g.innerHTML = '';
-  var list = LIBRARY==='journey' ? JOURNEY_TOPICS : LIBRARY==='virtues' ? VIRTUES_TOPICS : TOPICS;
-  for(var i=0;i<list.length;i++){
-    (function(t,idx){
-      var nm = (LIBRARY==='emotion' && LANG==='es' && ES.topics && ES.topics[t.id]) ? ES.topics[t.id] : t.name;
-      var ref = t.verse ? ((LANG==='es' && ES.data && ES.data[t.id]) ? ES.data[t.id].verse.ref : t.verse.ref) : '';
-      var btn = document.createElement('button');
-      btn.className = 'topic-tile';
-      btn.setAttribute('role','listitem');
-      btn.setAttribute('aria-label', nm);
-      btn.style.setProperty('--td',(0.05+idx*0.055)+'s');
-      btn.style.setProperty('--delay',t.delay||'0s');
-      btn.innerHTML = '<span class="topic-emoji" style="--td:'+(t.delay||'0s')+'">'+t.emoji+'</span>'
-        + '<span class="topic-name">'+nm+'</span>'
-        + (ref?'<span class="topic-ref">'+ref+'</span>':'');
-      btn.addEventListener('click', function(){ selectTopic(t.id); });
-      g.appendChild(btn);
-    })(list[i],i);
-  }
+  var g=document.getElementById('topicsGrid');if(!g)return;g.innerHTML='';
+  var _src = LIBRARY==='journey' ? JOURNEY_TOPICS : LIBRARY==='virtues' ? VIRTUES_TOPICS : TOPICS;
+  console.log('[SPARROW] buildGrid LIBRARY='+LIBRARY+' count='+_src.length);
+  _src.forEach(function(t,i){
+    var nm = (LIBRARY==='emotion'&&LANG==='es'&&ES.topics[t.id]) ? ES.topics[t.id] : t.name;
+    var ref = t.verse ? ((LANG==='es'&&ES.data&&ES.data[t.id]) ? ES.data[t.id].verse.ref : t.verse.ref) : '';
+    var btn=document.createElement('button');btn.className='topic-tile';
+    btn.setAttribute('role','listitem');btn.setAttribute('aria-label',nm);
+    btn.style.setProperty('--td',(0.05+i*0.055)+'s');
+    btn.innerHTML='<span class="topic-emoji" style="--td:'+(t.delay||'0s')+'">'+t.emoji+'</span><span class="topic-name">'+nm+'</span>'+(ref?'<span class="topic-ref">'+ref+'</span>':'');
+    btn.onclick=(function(id){return function(){selectTopic(id);};})(t.id);
+    g.appendChild(btn);
+  });
 };
 
 var _sa0=selectAge;
 selectAge=function(age){
-  AGE = age;
-  document.body.classList.toggle('nest-mode', age === 'nest');
-  var badge = document.getElementById('library-badge');
-  if(badge) badge.textContent = (LANG==='es'&&ES.ui) ?
+  AGE=age;document.body.classList.toggle('nest-mode',age==='nest');
+  if(LANG==='es'&&ES.ui){
+    var ui=ES.ui;
+    var tb=document.getElementById('topics-badge');if(tb)tb.textContent={nest:ui.nest_badge,rise:ui.rise_badge,soar:ui.soar_badge}[age]||'';
+    var tp=document.getElementById('topics-prompt');if(tp)tp.textContent={nest:ui.nest_prompt,rise:ui.rise_prompt,soar:ui.soar_prompt}[age]||'';
+  } else {
+    var m=AGE_MAP[age];
+    var tb2=document.getElementById('topics-badge');if(tb2)tb2.textContent=m.badge;
+    var tp2=document.getElementById('topics-prompt');if(tp2)tp2.textContent=m.prompt;
+  }
+  // v1.0 Stabilization: always go to library first
+  console.log('[SPARROW] selectAge:', age);
+  var lb = document.getElementById('library-badge');
+  if(lb) lb.textContent = (LANG==='es'&&ES.ui) ?
     ({nest:ES.ui.nest_badge,rise:ES.ui.rise_badge,soar:ES.ui.soar_badge}[age]||AGE_MAP[age].badge) :
     AGE_MAP[age].badge;
-  var screens = document.querySelectorAll('.screen');
-  for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
-  var s = document.getElementById('screen-library');
-  if(s){ s.classList.add('active'); window.scrollTo(0,0); }
-  // Block lib-card ghost clicks for 600ms after navigation
-  var cards = document.querySelectorAll('.lib-card');
-  for(var j=0;j<cards.length;j++) cards[j].style.pointerEvents = 'none';
-  setTimeout(function(){
-    var c2 = document.querySelectorAll('.lib-card');
-    for(var k=0;k<c2.length;k++) c2[k].style.pointerEvents = '';
-  }, 600);
+  goTo('screen-library');
 };
+
+
+/* ── v1.0 STABILIZATION: selectLibrary ────────────────────────
+   Sets LIBRARY, updates the topics screen header text,
+   calls buildGrid, and navigates to screen-topics.
+─────────────────────────────────────────────────────────────── */
+function selectLibrary(lib) {
+  console.log('[SPARROW] selectLibrary:', lib);
+  LIBRARY = lib;
+  var m = AGE_MAP[AGE];
+
+  // Update topics header badge
+  var badge = document.getElementById('topics-badge');
+  if (badge) badge.textContent = (LANG==='es'&&ES.ui) ?
+    ({nest:ES.ui.nest_badge,rise:ES.ui.rise_badge,soar:ES.ui.soar_badge}[AGE]||m.badge) : m.badge;
+
+  // Update topics title and prompt
+  var titleEl = document.getElementById('topics-title-text');
+  var promptEl = document.getElementById('topics-prompt');
+  if (lib === 'emotion') {
+    if (titleEl) titleEl.textContent = (LANG==='es') ? "¿Qué hay en tu corazón?" : "What's on your heart?";
+    if (promptEl) promptEl.textContent = (LANG==='es'&&ES.ui) ?
+      ({nest:ES.ui.nest_prompt,rise:ES.ui.rise_prompt,soar:ES.ui.soar_prompt}[AGE]||m.prompt) : m.prompt;
+  } else if (lib === 'journey') {
+    if (titleEl) titleEl.textContent = "What's happening in your life?";
+    if (promptEl) promptEl.textContent = (AGE==='nest') ?
+      'Tap what is happening for you.' : 'Choose the situation that fits best.';
+  } else if (lib === 'virtues') {
+    if (titleEl) titleEl.textContent = 'Who do you want to grow in being?';
+    if (promptEl) promptEl.textContent = (AGE==='nest') ?
+      'Tap something you want to grow in.' : 'Choose a virtue you want to grow in.';
+  }
+
+  buildGrid();
+  goTo('screen-topics');
+}
 
 var _pop0=populate;
 populate=function(){
@@ -1780,42 +1771,42 @@ var TOPIC_META = {
     grief_topic: false
   },
 
-  /* ── LIFE JOURNEY TOPICS ── */
-  divorce:{anchorVerses:['Psalm 46:1','Deuteronomy 31:6','Psalm 27:10','Romans 8:38-39'],bibleCharacters:['Joseph through family betrayal (Genesis 37-50)','Naomi after loss (Ruth 1)'],guardrails:['Never assign blame to either parent','Anchor in God\'s unchanging presence','Always encourage the child to talk to a trusted adult'],grief_topic:true},
-  addiction:{anchorVerses:['Psalm 34:18','Isaiah 41:10','Psalm 46:1','Romans 8:28'],bibleCharacters:['Joseph with a broken family (Genesis 37-50)','Elijah in burnout (1 Kings 19)'],guardrails:['Never suggest the child can fix the parent','Always point the child to a trusted adult','Never promise the parent will recover'],grief_topic:false},
-  incarcerated:{anchorVerses:['Psalm 27:10','Isaiah 49:15-16','Psalm 139:7-10','Romans 8:38-39'],bibleCharacters:['Joseph in prison (Genesis 39-40)','Paul in prison (Philippians 4)'],guardrails:['Never shame the child for the parent\'s situation','Always point to a trusted adult'],grief_topic:false},
-  death:{anchorVerses:['Psalm 34:18','John 11:35','Revelation 21:4','Romans 8:38-39'],bibleCharacters:['Jesus weeping at Lazarus\'s tomb (John 11)','Naomi after loss (Ruth 1)'],guardrails:['CRITICAL: Never state where the deceased person is now','Never say the person is in heaven watching over the child','Comfort must be directed toward the living child'],grief_topic:true},
-  blended:{anchorVerses:['Psalm 46:1','Romans 15:7','Ephesians 4:2','Colossians 3:13'],bibleCharacters:['Joseph navigating family tension (Genesis 37-50)','Ruth in a changed family (Ruth 1-4)'],guardrails:['Never take sides in family dynamics','Validate the difficulty of change'],grief_topic:false},
-  bullying:{anchorVerses:['Psalm 34:18','Romans 12:21','1 Samuel 17','Isaiah 43:1'],bibleCharacters:['David facing Goliath (1 Samuel 17)','Joseph mocked by brothers (Genesis 37)'],guardrails:['CRITICAL: Always direct the child to tell a trusted adult','Never suggest the child deserved it','Never minimize the pain'],grief_topic:false},
-  peerpressure:{anchorVerses:['Romans 12:2','Daniel 1:8','Proverbs 13:20','Galatians 1:10'],bibleCharacters:['Daniel refusing the king\'s food (Daniel 1)','Shadrach Meshach and Abednego (Daniel 3)'],guardrails:['Never shame the child for feeling the pressure','Anchor courage in God\'s presence'],grief_topic:false},
-  invisible:{anchorVerses:['Isaiah 43:1','Psalm 139:1-4','1 Samuel 16:7','John 4:7-26'],bibleCharacters:['Hagar seen by God (Genesis 16)','Zacchaeus noticed by Jesus (Luke 19)'],guardrails:['Never suggest invisibility is the child\'s fault','Anchor identity in God\'s care'],grief_topic:false},
-  romantc:{anchorVerses:['Proverbs 4:23','1 Corinthians 13:4-7','Psalm 119:9','Galatians 5:22-23'],bibleCharacters:['Joseph guarding his heart (Genesis 39)'],guardrails:['Treat feelings as valid — never shame','Anchor in guarding the heart','Point to a trusted adult'],grief_topic:false},
-  socialmedia:{anchorVerses:['Romans 12:2','Philippians 4:8','Psalm 139:14','Galatians 1:10'],bibleCharacters:['Elijah comparing himself (1 Kings 19)','Paul learning contentment (Philippians 4)'],guardrails:['Address the real harm of comparison','Anchor identity in God\'s view','Point to a trusted adult if causing harm'],grief_topic:false},
-  identity:{anchorVerses:['Genesis 1:27','Psalm 139:13-14','Isaiah 43:1','Jeremiah 1:5','Ephesians 2:10'],bibleCharacters:['God forming humanity in His image (Genesis 1-2)','Jeremiah called before birth (Jeremiah 1)'],guardrails:['CRITICAL: Content must be warm never condemning','CRITICAL: Anchor identity exclusively in Scripture','CRITICAL: Never express cultural opinion','For gender identity: anchor in God as Creator who made each person with purpose','Never shame — a child questioning identity needs to feel God\'s love first','Always point to a trusted Christian adult'],grief_topic:false},
-  bodyimage:{anchorVerses:['Psalm 139:14','1 Samuel 16:7','Genesis 1:31','1 Corinthians 6:19-20'],bibleCharacters:['God declaring creation as very good (Genesis 1)','David fearfully and wonderfully made (Psalm 139)'],guardrails:['Never make physical comparisons','Anchor worth in God\'s design not appearance'],grief_topic:false},
-  moving:{anchorVerses:['Deuteronomy 31:8','Joshua 1:9','Psalm 46:1','Jeremiah 29:11'],bibleCharacters:['Abraham called to an unknown place (Genesis 12)','Ruth leaving everything familiar (Ruth 1)'],guardrails:['Validate the grief of leaving','Anchor in God going before them to the new place'],grief_topic:false},
-  military:{anchorVerses:['Deuteronomy 31:8','Isaiah 43:2','Psalm 46:1','Joshua 1:9'],bibleCharacters:['Abraham moving repeatedly (Genesis 12-25)','Paul content in all circumstances (Philippians 4:11-13)'],guardrails:['Honor family service without making child feel guilty','Validate the unique loneliness of military transitions'],grief_topic:false},
-  whybadthings:{anchorVerses:['Romans 8:28','Habakkuk 1:2-3','Psalm 22:1-2','John 16:33'],bibleCharacters:['Habakkuk questioning God (Habakkuk 1-3)','Job in his suffering (Job 1-3)'],guardrails:['CRITICAL: Never say everything happens for a reason','Be honest that Scripture does not always explain why','Validate the question'],grief_topic:false},
-  prayerworks:{anchorVerses:['Philippians 4:6','1 John 5:14-15','Psalm 34:17','Matthew 7:7-8'],bibleCharacters:['Hannah pouring out her heart (1 Samuel 1)','Paul praying three times (2 Corinthians 12:7-9)'],guardrails:['CRITICAL: Never promise God will always answer the way we ask','Never suggest unanswered prayer means weak faith'],grief_topic:false},
-  unforgivable:{anchorVerses:['1 John 1:9','Romans 8:1','Psalm 103:12','Isaiah 43:25'],bibleCharacters:['Peter\'s denial and restoration (John 21)','David after Bathsheba (Psalm 51)','The prodigal son (Luke 15:11-32)'],guardrails:['CRITICAL: Never suggest any sin is beyond God\'s forgiveness','Anchor in Christ\'s finished work'],grief_topic:false},
+  /* ── LIFE JOURNEY ── */
+  divorce:{anchorVerses:["Psalm 46:1","Deuteronomy 31:6","Psalm 27:10","Romans 8:38-39"],bibleCharacters:["Joseph through family betrayal (Genesis 37-50)","Naomi after loss (Ruth 1)"],guardrails:["Never assign blame to either parent","Anchor in God's unchanging presence","Always encourage child to talk to a trusted adult"],grief_topic:true},
+  addiction:{anchorVerses:["Psalm 34:18","Isaiah 41:10","Psalm 46:1","Romans 8:28"],bibleCharacters:["Joseph with broken family (Genesis 37-50)","Elijah in burnout (1 Kings 19)"],guardrails:["Never suggest child can fix parent","Always point to trusted adult","Never promise parent will recover"],grief_topic:false},
+  incarcerated:{anchorVerses:["Psalm 27:10","Isaiah 49:15-16","Romans 8:38-39"],bibleCharacters:["Joseph in prison (Genesis 39-40)","Paul in prison (Philippians 4)"],guardrails:["Never shame the child","Always point to trusted adult"],grief_topic:false},
+  death:{anchorVerses:["Psalm 34:18","John 11:35","Revelation 21:4","Romans 8:38-39"],bibleCharacters:["Jesus weeping at Lazarus's tomb (John 11)","Naomi after loss (Ruth 1)"],guardrails:["CRITICAL: Never state where the deceased is now","Never say in heaven watching over the child","Comfort must be toward the living child"],grief_topic:true},
+  blended:{anchorVerses:["Psalm 46:1","Romans 15:7","Ephesians 4:2","Colossians 3:13"],bibleCharacters:["Joseph navigating family tension (Genesis 37-50)","Ruth in a changed family (Ruth 1-4)"],guardrails:["Never take sides","Validate difficulty of change"],grief_topic:false},
+  bullying:{anchorVerses:["Psalm 34:18","Romans 12:21","1 Samuel 17","Isaiah 43:1"],bibleCharacters:["David facing Goliath (1 Samuel 17)","Joseph mocked by brothers (Genesis 37)"],guardrails:["CRITICAL: Always direct child to trusted adult","Never suggest child deserved it"],grief_topic:false},
+  peerpressure:{anchorVerses:["Romans 12:2","Daniel 1:8","Proverbs 13:20","Galatians 1:10"],bibleCharacters:["Daniel refusing king's food (Daniel 1)","Shadrach Meshach and Abednego (Daniel 3)"],guardrails:["Never shame child for feeling pressure","Anchor courage in God's presence"],grief_topic:false},
+  invisible:{anchorVerses:["Isaiah 43:1","Psalm 139:1-4","John 4:7-26"],bibleCharacters:["Hagar seen by God (Genesis 16)","Zacchaeus noticed by Jesus (Luke 19)"],guardrails:["Never suggest invisibility is child's fault","Anchor in God's care"],grief_topic:false},
+  romantc:{anchorVerses:["Proverbs 4:23","1 Corinthians 13:4-7","Psalm 119:9"],bibleCharacters:["Joseph guarding his heart (Genesis 39)"],guardrails:["Never shame feelings","Point to a trusted adult"],grief_topic:false},
+  socialmedia:{anchorVerses:["Romans 12:2","Philippians 4:8","Psalm 139:14"],bibleCharacters:["Elijah comparing himself (1 Kings 19)","Paul learning contentment (Philippians 4)"],guardrails:["Address harm of comparison","Anchor identity in God's view"],grief_topic:false},
+  identity:{anchorVerses:["Genesis 1:27","Psalm 139:13-14","Isaiah 43:1","Jeremiah 1:5"],bibleCharacters:["God forming humanity in His image (Genesis 1-2)","Jeremiah called before birth (Jeremiah 1)"],guardrails:["CRITICAL: warm never condemning","CRITICAL: anchor in Scripture only","CRITICAL: never express cultural opinion","For gender identity anchor in God as Creator","Never shame","Always point to trusted Christian adult"],grief_topic:false},
+  bodyimage:{anchorVerses:["Psalm 139:14","1 Samuel 16:7","Genesis 1:31"],bibleCharacters:["God declaring creation very good (Genesis 1)","David fearfully and wonderfully made (Psalm 139)"],guardrails:["Never make physical comparisons","Anchor worth in God's design"],grief_topic:false},
+  moving:{anchorVerses:["Deuteronomy 31:8","Joshua 1:9","Psalm 46:1"],bibleCharacters:["Abraham called to unknown place (Genesis 12)","Ruth leaving everything familiar (Ruth 1)"],guardrails:["Validate grief of leaving","Anchor in God going before them"],grief_topic:false},
+  military:{anchorVerses:["Deuteronomy 31:8","Isaiah 43:2","Joshua 1:9"],bibleCharacters:["Abraham moving repeatedly (Genesis 12-25)","Paul content in all circumstances (Philippians 4)"],guardrails:["Honor family service","Validate unique loneliness of military transitions"],grief_topic:false},
+  whybadthings:{anchorVerses:["Romans 8:28","Habakkuk 1:2-3","Psalm 22:1-2","John 16:33"],bibleCharacters:["Habakkuk questioning God (Habakkuk 1-3)","Job in his suffering (Job 1-3)"],guardrails:["CRITICAL: Never say everything happens for a reason","Be honest Scripture does not always explain why"],grief_topic:false},
+  prayerworks:{anchorVerses:["Philippians 4:6","1 John 5:14-15","Psalm 34:17"],bibleCharacters:["Hannah pouring out her heart (1 Samuel 1)","Paul praying three times (2 Corinthians 12:7-9)"],guardrails:["CRITICAL: Never promise God always answers as we ask","Never suggest unanswered prayer means weak faith"],grief_topic:false},
+  unforgivable:{anchorVerses:["1 John 1:9","Romans 8:1","Psalm 103:12"],bibleCharacters:["Peter's denial and restoration (John 21)","The prodigal son (Luke 15:11-32)"],guardrails:["CRITICAL: Never suggest any sin is beyond God's forgiveness","Anchor in Christ's finished work"],grief_topic:false},
 
-  /* ── BIBLICAL VIRTUES TOPICS ── */
-  love:{anchorVerses:['1 Corinthians 13:4-7','John 13:34-35','Romans 5:8'],bibleCharacters:['Jesus washing feet (John 13)','The good Samaritan (Luke 10)'],guardrails:['Ground love in Christ\'s sacrificial love first'],grief_topic:false},
-  joy:{anchorVerses:['Philippians 4:4','Nehemiah 8:10','John 15:11'],bibleCharacters:['Paul and Silas singing in prison (Acts 16)','Mary\'s Magnificat (Luke 1)'],guardrails:['Distinguish joy from happiness — joy endures through hardship'],grief_topic:false},
-  peace:{anchorVerses:['Philippians 4:7','Isaiah 26:3','John 14:27'],bibleCharacters:['Jesus sleeping in the storm (Mark 4)','Paul in prison with peace (Philippians 4)'],guardrails:['Anchor in Christ as the source of peace'],grief_topic:false},
-  patience:{anchorVerses:['Romans 5:3-4','James 1:3-4','Psalm 27:14'],bibleCharacters:['Joseph waiting through pit and prison (Genesis 37-41)','Abraham waiting for the promised son (Genesis 12-21)'],guardrails:['Never minimize how hard waiting is'],grief_topic:false},
-  kindness:{anchorVerses:['Ephesians 4:32','Proverbs 11:17','Luke 10:30-37'],bibleCharacters:['The good Samaritan (Luke 10)','Boaz showing kindness to Ruth (Ruth 2)'],guardrails:['Ground kindness in God\'s kindness toward us first'],grief_topic:false},
-  goodness:{anchorVerses:['Romans 15:14','Galatians 5:22','Micah 6:8'],bibleCharacters:['Joseph refusing Potiphar\'s wife (Genesis 39)','Daniel resolving not to defile himself (Daniel 1)'],guardrails:['Ground goodness in God\'s character as its source'],grief_topic:false},
-  faithfulness:{anchorVerses:['Lamentations 3:23','Matthew 25:21','Hebrews 11:1'],bibleCharacters:['Ruth\'s faithfulness to Naomi (Ruth 1)','Daniel faithful in a foreign land (Daniel 1-6)'],guardrails:['Anchor faithfulness in God\'s faithfulness first'],grief_topic:false},
-  gentleness:{anchorVerses:['Matthew 11:29','Galatians 5:23','Proverbs 15:1'],bibleCharacters:['Jesus with the children (Mark 10:13-16)','Boaz with Ruth (Ruth 2)'],guardrails:['Distinguish gentleness from weakness'],grief_topic:false},
-  selfcontrol:{anchorVerses:['Galatians 5:23','Proverbs 25:28','James 1:19-20'],bibleCharacters:['Joseph fleeing temptation (Genesis 39)','Jesus in the wilderness (Matthew 4:1-11)'],guardrails:['Anchor self-control in the Spirit\'s power not willpower'],grief_topic:false},
-  honesty:{anchorVerses:['Proverbs 12:17','Ephesians 4:15','John 8:32'],bibleCharacters:['Nathan speaking truth to David (2 Samuel 12)'],guardrails:['Teach truth-telling with grace — speaking truth in love'],grief_topic:false},
-  courage:{anchorVerses:['Joshua 1:9','Psalm 27:1','Daniel 3:17-18'],bibleCharacters:['David facing Goliath (1 Samuel 17)','Esther going before the king (Esther 4-5)'],guardrails:['Ground courage in God\'s presence not absence of fear'],grief_topic:false},
-  humility:{anchorVerses:['Philippians 2:3-4','James 4:10','Micah 6:8'],bibleCharacters:['Jesus washing feet (John 13)','The tax collector\'s prayer (Luke 18:13)'],guardrails:['Distinguish humility from low self-esteem'],grief_topic:false},
-  forgiveness:{anchorVerses:['Ephesians 4:32','Matthew 18:21-22','Luke 23:34'],bibleCharacters:['Joseph forgiving his brothers (Genesis 50)','The prodigal son\'s father (Luke 15)'],guardrails:['CRITICAL: Distinguish forgiving from excusing','Anchor in receiving God\'s forgiveness first'],grief_topic:false},
-  generosity:{anchorVerses:['2 Corinthians 9:7','Luke 21:1-4','Proverbs 11:24-25'],bibleCharacters:['The widow\'s offering (Luke 21)','Zacchaeus giving back (Luke 19)'],guardrails:['Ground giving in God\'s generosity toward us first'],grief_topic:false},
-  gratitude:{anchorVerses:['1 Thessalonians 5:18','Psalm 100:4','Colossians 3:17'],bibleCharacters:['The one leper who returned (Luke 17)','David\'s psalms of thanksgiving (Psalm 103)'],guardrails:['Never suggest gratitude means pretending hardship is not hard'],grief_topic:false},
-  wisdom:{anchorVerses:['James 1:5','Proverbs 9:10','Proverbs 3:5-6'],bibleCharacters:['Solomon asking for wisdom (1 Kings 3)','Daniel with wisdom beyond his years (Daniel 1)'],guardrails:['Ground wisdom in God as its source'],grief_topic:false}
+  /* ── BIBLICAL VIRTUES ── */
+  love:{anchorVerses:["1 Corinthians 13:4-7","John 13:34-35","Romans 5:8"],bibleCharacters:["Jesus washing feet (John 13)","The good Samaritan (Luke 10)"],guardrails:["Ground love in Christ's sacrificial love first"],grief_topic:false},
+  joy:{anchorVerses:["Philippians 4:4","Nehemiah 8:10","John 15:11"],bibleCharacters:["Paul and Silas singing in prison (Acts 16)","Mary's Magnificat (Luke 1)"],guardrails:["Distinguish joy from happiness"],grief_topic:false},
+  peace:{anchorVerses:["Philippians 4:7","Isaiah 26:3","John 14:27"],bibleCharacters:["Jesus sleeping in the storm (Mark 4)","Paul in prison with peace (Philippians 4)"],guardrails:["Anchor in Christ as source of peace"],grief_topic:false},
+  patience:{anchorVerses:["Romans 5:3-4","James 1:3-4","Psalm 27:14"],bibleCharacters:["Joseph waiting through pit and prison (Genesis 37-41)","Abraham waiting for promised son (Genesis 12-21)"],guardrails:["Never minimize how hard waiting is"],grief_topic:false},
+  kindness:{anchorVerses:["Ephesians 4:32","Proverbs 11:17","Luke 10:30-37"],bibleCharacters:["The good Samaritan (Luke 10)","Boaz showing kindness to Ruth (Ruth 2)"],guardrails:["Ground kindness in God's kindness first"],grief_topic:false},
+  goodness:{anchorVerses:["Romans 15:14","Galatians 5:22","Micah 6:8"],bibleCharacters:["Joseph refusing Potiphar's wife (Genesis 39)","Daniel resolving not to defile himself (Daniel 1)"],guardrails:["Ground goodness in God's character"],grief_topic:false},
+  faithfulness:{anchorVerses:["Lamentations 3:23","Matthew 25:21","Hebrews 11:1"],bibleCharacters:["Ruth's faithfulness to Naomi (Ruth 1)","Daniel faithful in foreign land (Daniel 1-6)"],guardrails:["Anchor faithfulness in God's faithfulness first"],grief_topic:false},
+  gentleness:{anchorVerses:["Matthew 11:29","Galatians 5:23","Proverbs 15:1"],bibleCharacters:["Jesus with the children (Mark 10:13-16)","Boaz with Ruth (Ruth 2)"],guardrails:["Distinguish gentleness from weakness"],grief_topic:false},
+  selfcontrol:{anchorVerses:["Galatians 5:23","Proverbs 25:28","James 1:19-20"],bibleCharacters:["Joseph fleeing temptation (Genesis 39)","Jesus in the wilderness (Matthew 4:1-11)"],guardrails:["Anchor self-control in Spirit's power not willpower"],grief_topic:false},
+  honesty:{anchorVerses:["Proverbs 12:17","Ephesians 4:15","John 8:32"],bibleCharacters:["Nathan speaking truth to David (2 Samuel 12)"],guardrails:["Teach truth-telling with grace"],grief_topic:false},
+  courage:{anchorVerses:["Joshua 1:9","Psalm 27:1","Daniel 3:17-18"],bibleCharacters:["David facing Goliath (1 Samuel 17)","Esther going before the king (Esther 4-5)"],guardrails:["Ground courage in God's presence not absence of fear"],grief_topic:false},
+  humility:{anchorVerses:["Philippians 2:3-4","James 4:10","Micah 6:8"],bibleCharacters:["Jesus washing feet (John 13)","The tax collector's prayer (Luke 18:13)"],guardrails:["Distinguish humility from low self-esteem"],grief_topic:false},
+  forgiveness:{anchorVerses:["Ephesians 4:32","Matthew 18:21-22","Luke 23:34"],bibleCharacters:["Joseph forgiving his brothers (Genesis 50)","The prodigal son's father (Luke 15)"],guardrails:["CRITICAL: Distinguish forgiving from excusing","Anchor in receiving God's forgiveness first"],grief_topic:false},
+  generosity:{anchorVerses:["2 Corinthians 9:7","Luke 21:1-4","Proverbs 11:24-25"],bibleCharacters:["The widow's offering (Luke 21)","Zacchaeus giving back (Luke 19)"],guardrails:["Ground giving in God's generosity first"],grief_topic:false},
+  gratitude:{anchorVerses:["1 Thessalonians 5:18","Psalm 100:4","Colossians 3:17"],bibleCharacters:["The one leper who returned (Luke 17)","David's psalms of thanksgiving (Psalm 103)"],guardrails:["Never suggest gratitude means pretending hardship is not hard"],grief_topic:false},
+  wisdom:{anchorVerses:["James 1:5","Proverbs 9:10","Proverbs 3:5-6"],bibleCharacters:["Solomon asking for wisdom (1 Kings 3)","Daniel with wisdom beyond his years (Daniel 1)"],guardrails:["Ground wisdom in God as its source"],grief_topic:false}
 };
 
 /* ── AGE VOCABULARY PROFILES ─────────────────────────────────
@@ -1869,8 +1860,7 @@ function buildSystemPrompt(topicId, age, lang) {
   var meta  = TOPIC_META[topicId];
   var prof  = AGE_PROFILES[age];
   var isEs  = (lang === 'es');
-  var langName = isEs ? 'Spanish (Latin American)' : 'English';
-  var bibleVersion = isEs ? 'Reina Valera 1960 (RVR1960)' : 'English Standard Version (ESV)';
+  var langName = isEs ? 'Spanish (Latin American, specifically Mexican Spanish for the Español button audience)' : 'English';
 
   return [
     '═══════════════════════════════════════════════════════',
@@ -2404,26 +2394,36 @@ function populateDynamic(session, topicId, age, lang) {
    3. On success: populate and navigate
    4. On failure: fall back to fixed content silently
 ─────────────────────────────────────────────────────────────── */
+/* ── v1.0 STABILIZATION: selectTopic searches all three libraries ── */
 var _selectTopic_orig = selectTopic;
 selectTopic = function(id) {
-  // Set TOPIC and STEP same as original
+  console.log('[SPARROW] selectTopic:', id, 'LIBRARY:', LIBRARY);
+
+  // Search TOPICS, JOURNEY_TOPICS, and VIRTUES_TOPICS
   TOPIC = null;
-  for (var i = 0; i < TOPICS.length; i++) {
-    if (TOPICS[i].id === id) { TOPIC = TOPICS[i]; break; }
+  var _allTopics = TOPICS.concat(JOURNEY_TOPICS).concat(VIRTUES_TOPICS);
+  for (var i = 0; i < _allTopics.length; i++) {
+    if (_allTopics[i].id === id) { TOPIC = _allTopics[i]; break; }
   }
-  if (!TOPIC) return;
+  if (!TOPIC) {
+    console.log('[SPARROW] selectTopic: topic not found for id=', id);
+    return;
+  }
+  console.log('[SPARROW] topic found:', TOPIC.name, '| source:', LIBRARY);
+
   STEP = 's';
   resetSteps();
   goTo('screen-daily');
   ann('You chose: ' + TOPIC.name + '. Getting your session ready.');
 
-  // Show loading
+  // ALL topics use AI generation — emotion topics have local fallback,
+  // journey and virtues topics have AI-only content
   showLoadingOverlay(AGE, id, LANG);
+  console.log('[SPARROW] calling fetchDynamicSession for:', id);
 
-  // Fetch dynamic content
   fetchDynamicSession(id, AGE, LANG,
     function(session) {
-      // Success — populate with AI content
+      console.log('[SPARROW] AI session received for:', id);
       hideLoadingOverlay();
       populateDynamic(session, id, AGE, LANG);
       ann('Your session is ready.');
@@ -2432,17 +2432,35 @@ selectTopic = function(id) {
       }
     },
     function(err) {
-      // Failure — fall back to fixed content gracefully
-      console.log('SPARROW Jr. dynamic content fallback:', err);
+      console.log('[SPARROW] AI fallback for:', id, 'error:', err);
       hideLoadingOverlay();
-      showFallbackNotice(AGE, LANG);
-      // Use original populate
-      if (LANG === 'es') {
-        var esT = ES && ES.data && ES.data[id];
-        if (esT) { populate(); }
-        else { _selectTopic_orig(id); return; }
+      // Emotion topics have local fallback content
+      // Journey/Virtues topics show a gentle message
+      var inTOPICS = false;
+      for (var j = 0; j < TOPICS.length; j++) {
+        if (TOPICS[j].id === id) { inTOPICS = true; break; }
+      }
+      if (inTOPICS) {
+        showFallbackNotice(AGE, LANG);
+        if (LANG === 'es') {
+          var esT = ES && ES.data && ES.data[id];
+          if (esT) { populate(); } else { _selectTopic_orig(id); }
+        } else {
+          populate();
+        }
       } else {
-        populate();
+        // Journey or Virtues — show a gentle offline message
+        showFallbackNotice(AGE, LANG);
+        var offlineMsg = LANG === 'es'
+          ? 'Necesitas conexión a internet para este tema. Por favor intenta de nuevo.'
+          : 'This topic needs an internet connection. Please try again when you are online.';
+        var daily = document.getElementById('screen-daily');
+        if (daily) {
+          var msg = document.createElement('div');
+          msg.style.cssText = 'padding:32px 22px;text-align:center;font-family:var(--font-d);font-size:16px;color:var(--forest);line-height:1.6;';
+          msg.textContent = offlineMsg;
+          daily.insertBefore(msg, daily.firstChild);
+        }
       }
     }
   );
