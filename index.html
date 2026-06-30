@@ -1143,7 +1143,7 @@ function populate(){
     +'</div></div>':'';
 
   TTS_TEXT.story=ack+' '+sd.text+'. '+t.verse.text+'. That is from '+spRef(t.verse.ref)+'.';
-  document.getElementById('story-content').innerHTML=ackCard+'<div id="listen-s"></div>'+paras+scrBlock;
+  document.getElementById('story-content').innerHTML='<div id="listen-s"></div>'+ackCard+paras+scrBlock;
   document.getElementById('listen-s').innerHTML=mkListenBar('story','Listen to this story','Tap to hear it read aloud');
 
   var pnEl=document.getElementById('story-pnote');
@@ -1694,7 +1694,7 @@ populate=function(){
   var ackFs=AGE==='nest'?'19':AGE==='rise'?'15':'14';
   var ackCard=ack?'<div class="ack-card '+(ackCls[AGE]||'ack-rise')+'"><span style="font-size:24px;flex-shrink:0;">💬</span><div><div class="ack-label">'+ui.hear_you+'</div><p style="font-size:'+ackFs+'px;">'+ack+'</p></div></div>':'';
   TTS_TEXT.story=ack+' '+storyText+'. '+es_t.verse.text;
-  document.getElementById('story-content').innerHTML=ackCard+'<div id="listen-s"></div>'+paras+scrBlock;
+  document.getElementById('story-content').innerHTML='<div id="listen-s"></div>'+ackCard+paras+scrBlock;
   document.getElementById('listen-s').innerHTML=mkListenBar('story',ui.listen_story,ui.listen_tap);
   var pnEl=document.getElementById('story-pnote');
   if(AGE==='nest'&&sd.pnote)pnEl.innerHTML='<div class="parent-note"><span class="pn-icon">👨‍👧</span><div><div class="pn-label">'+ui.for_grownup+'</div><div class="pn-text">'+sd.pnote+'</div></div></div>';
@@ -2339,9 +2339,9 @@ function populateDynamic(session, topicId, age, lang) {
 
   var listenLbl = ui ? ui.listen_story : 'Listen to this story';
   var listenSub = ui ? ui.listen_tap   : 'Tap to hear it read aloud';
-  document.getElementById('story-content').innerHTML = ackCard
+  document.getElementById('story-content').innerHTML = '<div id="listen-s"></div>'
+    + ackCard
     + refBadge
-    + '<div id="listen-s"></div>'
     + paras + scrBlock;
   document.getElementById('listen-s').innerHTML = mkListenBar('story', listenLbl, listenSub);
 
