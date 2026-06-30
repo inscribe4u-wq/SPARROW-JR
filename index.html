@@ -2054,6 +2054,11 @@ function buildSystemPrompt(topicId, age, lang) {
     '- Content that minimizes the child\'s real emotional experience',
     '',
     '══════════════════════════════════════════',
+    'RULE 4B — KEEP THE SCRIPTURE SELECTION SHORT.',
+    '══════════════════════════════════════',
+    'Never quote a full chapter or a long passage range like John 1:1-17. Choose ONE, or at most TWO consecutive, verses that capture the heart of the lesson. A child who struggles with reading should never see a wall of scripture text. Trust one well-chosen verse to carry the weight — that is more faithful to how this should feel for a young reader than quoting broadly.',
+    '',
+    '══════════════════════════════════════',
     'RULE 5 — LEARNING FEEDBACK. EVERY ANSWER TEACHES.',
     '══════════════════════════════════════════',
     'There are two kinds of questions. Decide which kind this question is, and set question_type accordingly.',
@@ -2081,7 +2086,7 @@ function buildSystemPrompt(topicId, age, lang) {
     'The JSON must have exactly this structure:',
     '',
     '{',
-    '  "verse": { "text": "exact verse text", "ref": "Book Chapter:Verse" },',
+    '  "verse": { "text": "exact verse text \u2014 ONE TO TWO VERSES MAXIMUM, never a full chapter or long passage range. Choose the single most relevant verse, not the broadest one.", "ref": "Book Chapter:Verse" },',
     '  "story": "the full story text using \\n\\n to separate paragraphs",',
     '  "ack": "the acknowledgement card text (1-2 sentences validating the emotion and introducing the Bible character)",',
     '  "story_summary": "ONE short plain sentence summarizing the Bible story",',
@@ -2310,8 +2315,16 @@ function populateDynamic(session, topicId, age, lang) {
   var paras = session.story.split('\n\n').map(function(p){
     return '<p class="' + tc + '" style="margin-bottom:14px">' + p + '</p>';
   }).join('');
+  // Defensive backstop: even though the AI is instructed to keep verse
+  // selection short, this guards the actual screen in case a longer
+  // passage ever slips through, so no child is shown a wall of scripture.
+  var _verseText = session.verse.text || '';
+  var _verseWords = _verseText.split(/\s+/);
+  if (_verseWords.length > 45) {
+    _verseText = _verseWords.slice(0, 45).join(' ') + '\u2026';
+  }
   var scrBlock = '<div class="scripture-block">'
-    + '<p class="scripture-text">"' + session.verse.text + '"</p>'
+    + '<p class="scripture-text">"' + _verseText + '"</p>'
     + '<p class="scripture-ref">' + session.verse.ref + '</p>'
     + '</div>';
 
