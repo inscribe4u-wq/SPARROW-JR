@@ -2605,19 +2605,38 @@ selectTopic = function(id) {
     function(err) {
       console.log('[SPARROW] fallback for:', id, err);
       hideLoadingOverlay();
-      showFallbackNotice(AGE, LANG);
-      // Emotion topics have local content as fallback
+
+      // Only emotion topics actually have saved local content to fall back
+      // to. Showing "using saved content" for Journey/Virtues topics, which
+      // have no local fallback at all, was misleading — there was nothing
+      // saved to show. Check which case is actually true BEFORE messaging.
       var _inEmotion = false;
       for (var j=0; j<TOPICS.length; j++) { if(TOPICS[j].id===id){_inEmotion=true;break;} }
+
       if (_inEmotion) {
+        // Genuine case: real saved content exists and will be shown
+        showFallbackNotice(AGE, LANG);
         if (LANG === 'es') {
           var esT = ES && ES.data && ES.data[id];
           if (esT) { populate(); } else { _selectTopic_orig(id); }
         } else {
           populate();
         }
+      } else {
+        // Journey/Virtues: nothing saved to fall back to — show the
+        // honest retry screen instead of claiming saved content exists
+        var daily = document.getElementById('screen-daily');
+        if (daily) {
+          var retryDiv = document.createElement('div');
+          retryDiv.style.cssText = 'padding:32px 20px;text-align:center;max-width:380px;margin:0 auto;';
+          retryDiv.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">\uD83D\uDCD6</div>'
+            + '<p style="font-family:var(--font-d);font-size:18px;color:var(--forest);margin-bottom:8px;">Connecting to God\'s Word\u2026</p>'
+            + '<p style="font-size:14px;color:var(--sage);line-height:1.7;margin-bottom:20px;">We need an internet connection to bring you a fresh Bible lesson for this topic. Please check your connection and try again.</p>'
+            + '<button onclick="selectTopic(\'' + id + '\')" style="background:var(--forest);color:#fff;border:none;border-radius:30px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;width:100%;">Try Again</button>'
+            + '<button onclick="goTo(\'screen-topics\')" style="background:transparent;color:var(--sage);border:1.5px solid var(--sage);border-radius:30px;padding:12px 28px;font-size:14px;cursor:pointer;width:100%;">Choose Another Topic</button>';
+          daily.appendChild(retryDiv);
+        }
       }
-      // Journey/Virtues: fallback notice already shown, session stays on loading screen
     }
   );
 };
