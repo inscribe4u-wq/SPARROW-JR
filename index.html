@@ -1259,54 +1259,75 @@ function saveCurrentJ(){
 function saveJ(ta,k){try{localStorage.setItem(k,ta.value);}catch(e){}}
 
 function pickChoice(btn,ev){
-  if(ev){
-    var r=btn.getBoundingClientRect();
-    var rp=document.createElement('div');rp.className='q-ripple';
-    rp.style.left=(ev.clientX-r.left)+'px';rp.style.top=(ev.clientY-r.top)+'px';
-    btn.appendChild(rp);setTimeout(function(){rp.remove();},700);
-    burst(ev.clientX,ev.clientY,10);
-  }
-  btn.closest('.q-choices').querySelectorAll('.q-choice').forEach(function(b){b.classList.remove('sel');b.classList.remove('q-best');b.classList.remove('q-grow');b.setAttribute('aria-pressed','false');});
-  btn.classList.add('sel');btn.setAttribute('aria-pressed','true');
-  if(!TOPIC)return;
-  var lb=btn.querySelector('.c-label');if(!lb)return;
-  var label=lb.textContent.trim();
-
-  // Determine if this is a comprehension question with a best/not-best answer
-  var dynQ = (window._dynSession && window._dynSession.question) ? window._dynSession.question : null;
-  var isComprehension = dynQ && dynQ.question_type === 'comprehension';
-  var pickedBest = null;
-  if (isComprehension && dynQ.choices) {
-    for (var i=0;i<dynQ.choices.length;i++){
-      if (dynQ.choices[i].l === label) { pickedBest = !!dynQ.choices[i].best; break; }
+  try {
+    console.log('[SPARROW Jr] pickChoice called');
+    if(ev){
+      var r=btn.getBoundingClientRect();
+      var rp=document.createElement('div');rp.className='q-ripple';
+      rp.style.left=(ev.clientX-r.left)+'px';rp.style.top=(ev.clientY-r.top)+'px';
+      btn.appendChild(rp);setTimeout(function(){rp.remove();},700);
+      burst(ev.clientX,ev.clientY,10);
     }
-    btn.classList.add(pickedBest ? 'q-best' : 'q-grow');
+    var choicesGroup = btn.closest('.q-choices');
+    console.log('[SPARROW Jr] choicesGroup found:', !!choicesGroup);
+    if (choicesGroup) {
+      choicesGroup.querySelectorAll('.q-choice').forEach(function(b){b.classList.remove('sel');b.classList.remove('q-best');b.classList.remove('q-grow');b.setAttribute('aria-pressed','false');});
+    }
+    btn.classList.add('sel');btn.setAttribute('aria-pressed','true');
+
+    var lb=btn.querySelector('.c-label');
+    console.log('[SPARROW Jr] label element found:', !!lb, 'TOPIC:', TOPIC ? TOPIC.id : 'null');
+    if(!lb){
+      alert('DEBUG: No .c-label found inside the choice button. Please screenshot and tell Claude.');
+      return;
+    }
+    var label=lb.textContent.trim();
+
+    // Determine if this is a comprehension question with a best/not-best answer
+    var dynQ = (window._dynSession && window._dynSession.question) ? window._dynSession.question : null;
+    var isComprehension = dynQ && dynQ.question_type === 'comprehension';
+    var pickedBest = null;
+    if (isComprehension && dynQ.choices) {
+      for (var i=0;i<dynQ.choices.length;i++){
+        if (dynQ.choices[i].l === label) { pickedBest = !!dynQ.choices[i].best; break; }
+      }
+      btn.classList.add(pickedBest ? 'q-best' : 'q-grow');
+    }
+
+    // Resolve the response text
+    var ack=null;
+    var ta=(TOPIC && CHOICE_ACK[TOPIC.id]) ? CHOICE_ACK[TOPIC.id] : null;
+    if(ta&&ta[label]){ack=ta[label];}
+    else if(window._dynChoiceAck&&window._dynChoiceAck[label]){ack=window._dynChoiceAck[label];}
+    else{ack='Thank you for sharing that. God sees exactly how you feel, and He loves you so much.';}
+
+    console.log('[SPARROW Jr] resolved ack:', ack);
+
+    // For comprehension questions, append the teaching response so the child learns either way
+    var teaching = (dynQ && dynQ.teaching_response) ? dynQ.teaching_response : '';
+    var headerEmoji = isComprehension ? (pickedBest ? '\u2728' : '\uD83D\uDD4A\uFE0F') : '\uD83D\uDD4A\uFE0F';
+    var fullText = ack + (teaching ? (' ' + teaching) : '');
+
+    // Show ack as a card below choices
+    var existing=document.getElementById('choice-ack-card');
+    if(existing)existing.remove();
+    var card=document.createElement('div');
+    card.id='choice-ack-card';
+    var borderColor = isComprehension ? (pickedBest ? '#4A7C59' : '#C9A227') : '#4A7C59';
+    card.style.cssText='background:#F0F7F0;border-left:3px solid '+borderColor+';border-radius:0 12px 12px 0;padding:14px 16px;margin-top:14px;animation:fadeUp .3s ease both;';
+    card.innerHTML='<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;font-style:italic;">'+headerEmoji+' '+fullText+'</p>';
+    if (choicesGroup && choicesGroup.parentNode) {
+      choicesGroup.parentNode.insertBefore(card,choicesGroup.nextSibling);
+    } else {
+      btn.parentNode.appendChild(card);
+    }
+    console.log('[SPARROW Jr] card inserted into DOM');
+    if(TTS&&TTS.stop)TTS.stop();
+    setTimeout(function(){TTS.speakDirect(fullText);},300);
+  } catch(outerErr) {
+    console.log('[SPARROW Jr] pickChoice OUTER ERROR:', outerErr);
+    alert('DEBUG: pickChoice crashed: ' + outerErr.message + ' Please screenshot and tell Claude.');
   }
-
-  // Resolve the response text
-  var ack=null;
-  var ta=CHOICE_ACK[TOPIC.id];
-  if(ta&&ta[label]){ack=ta[label];}
-  else if(window._dynChoiceAck&&window._dynChoiceAck[label]){ack=window._dynChoiceAck[label];}
-  else{ack='Thank you for sharing that. God sees exactly how you feel, and He loves you so much.';}
-
-  // For comprehension questions, append the teaching response so the child learns either way
-  var teaching = (dynQ && dynQ.teaching_response) ? dynQ.teaching_response : '';
-  var headerEmoji = isComprehension ? (pickedBest ? '\u2728' : '\uD83D\uDD4A\uFE0F') : '\uD83D\uDD4A\uFE0F';
-  var fullText = ack + (teaching ? (' ' + teaching) : '');
-
-  // Show ack as a card below choices
-  var existing=document.getElementById('choice-ack-card');
-  if(existing)existing.remove();
-  var card=document.createElement('div');
-  card.id='choice-ack-card';
-  var borderColor = isComprehension ? (pickedBest ? '#4A7C59' : '#C9A227') : '#4A7C59';
-  card.style.cssText='background:#F0F7F0;border-left:3px solid '+borderColor+';border-radius:0 12px 12px 0;padding:14px 16px;margin-top:14px;animation:fadeUp .3s ease both;';
-  card.innerHTML='<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;font-style:italic;">'+headerEmoji+' '+fullText+'</p>';
-  var choicesEl=btn.closest('.q-choices');
-  if(choicesEl&&choicesEl.parentNode)choicesEl.parentNode.insertBefore(card,choicesEl.nextSibling);
-  if(TTS&&TTS.stop)TTS.stop();
-  setTimeout(function(){TTS.speakDirect(fullText);},300);
 }
 
 function toggleStep(el,ev){
@@ -2636,9 +2657,17 @@ console.log('SPARROW Jr. Dynamic Content Engine loaded. Bible-only. Age-guarded.
 
 function submitJournalResponse() {
   console.log('[SPARROW Jr] submitJournalResponse called');
+  try {
   var ta = document.querySelector('#step-o .journal-ta');
   console.log('[SPARROW Jr] textarea found:', !!ta, 'value:', ta ? ta.value : 'N/A');
-  if (!ta || !ta.value.trim()) { console.log('[SPARROW Jr] No textarea or empty value — exiting'); return; }
+  if (!ta) {
+    alert('DEBUG: Could not find the textarea (#step-o .journal-ta). Please screenshot this and tell Claude.');
+    return;
+  }
+  if (!ta.value.trim()) {
+    alert('Please write something before tapping Share with Soar.');
+    return;
+  }
   var response = ta.value.trim();
   var topicName = TOPIC ? TOPIC.name : 'this topic';
   var age = AGE || 'rise';
@@ -2725,6 +2754,10 @@ function submitJournalResponse() {
     clearTimeout(sjrTimeout);
     sjrShow(SJR_FALLBACK);
   });
+  } catch(outerErr) {
+    console.log('[SPARROW Jr] OUTER ERROR:', outerErr);
+    alert('DEBUG: submitJournalResponse crashed: ' + outerErr.message + ' Please screenshot this and tell Claude.');
+  }
 }
 
 /* ── FLAG FOR REVIEW ───────────────────────────────────────────
