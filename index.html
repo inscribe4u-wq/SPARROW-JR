@@ -435,7 +435,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
 ══════════════════════════════════════════ -->
 <section id="screen-library" class="screen" role="main" aria-label="Where would you like to start?">
   <div class="topics-hdr">
-    <button class="topics-back" onclick="goTo('screen-welcome')" aria-label="Back to home">← Back</button>
+    <button class="topics-back" id="nav-back-home" onclick="goTo('screen-welcome')" aria-label="Back to home">← Back</button>
     <div class="topics-hdr-inner">
       <div class="topics-badge" id="library-badge">Ages 4–7 · Little Wings</div>
       <h2 class="topics-title" id="library-title">Where would you like to start?</h2>
@@ -489,7 +489,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
   <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:25%;"></div></div>
   <div class="daily-hdr">
     <div class="daily-nav">
-      <button class="daily-back" onclick="goTo('screen-topics')" aria-label="Back to topics">← Topics</button>
+      <button class="daily-back" id="nav-back-topics" onclick="goTo('screen-topics')" aria-label="Back to topics">← Topics</button>
       <div class="topic-badge"><span id="topic-emoji">😟</span><span id="topic-name">Fear</span></div>
     </div>
     <div class="soar-tabs" role="tablist" aria-label="SPARROW Jr. steps">
@@ -512,7 +512,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         <div id="story-summary-learn"></div>
         <div id="story-pnote"></div>
       </div>
-      <div class="nav-row"><button class="btn-p" onclick="nextStep('o')">Next: Open Your Heart →</button></div>
+      <div class="nav-row"><button class="btn-p" id="nav-next-o" onclick="nextStep('o')">Next: Open Your Heart →</button></div>
     </div>
     <!-- O -->
     <div class="soar-step" id="step-o" role="tabpanel" aria-labelledby="tab-o">
@@ -526,8 +526,8 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         <div id="q-response"></div>
       </div>
       <div class="nav-row">
-        <button class="btn-s" onclick="nextStep('s')">← Back</button>
-        <button class="btn-p" onclick="nextStep('a')">Next: Action →</button>
+        <button class="btn-s" id="nav-back-s" onclick="nextStep('s')">← Back</button>
+        <button class="btn-p" id="nav-next-a" onclick="nextStep('a')">Next: Action →</button>
       </div>
     </div>
     <!-- A -->
@@ -547,8 +547,8 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         <div id="god-sighting"></div>
       </div>
       <div class="nav-row">
-        <button class="btn-s" onclick="nextStep('o')">← Back</button>
-        <button class="btn-p" onclick="nextStep('r')">Next: Prayer →</button>
+        <button class="btn-s" id="nav-back-o" onclick="nextStep('o')">← Back</button>
+        <button class="btn-p" id="nav-next-r" onclick="nextStep('r')">Next: Prayer →</button>
       </div>
     </div>
     <!-- R -->
@@ -1378,15 +1378,37 @@ function finishSession(){
   var encG=COMP_ENC[AGE]||COMP_ENC.rise;
   var enc=encG[tid]||encG.fear;
   var nt=nextTopic();
-  var titles={nest:'You did it! You soared! 🌟',rise:'You soared today! Well done.',soar:'You showed up. That matters.'};
-  var subs={nest:'God delights in you — Psalm 147:11.',rise:'All four steps. Well done.',soar:'Seek · Open · Act · Respond.'};
-  var sm=str.count===1?'First day — great start!':str.count+' days in a row!';
+
+  // The entire completion screen had no Spanish support at all — every
+  // string was hardcoded English regardless of language, even though
+  // real translations (comp_nest, comp_rise, word_for_you, choose_topic,
+  // home, etc.) already existed unused in ES.ui from earlier in the build.
+  var isEs = (LANG === 'es' && typeof ES !== 'undefined' && ES.ui);
+  var ui = isEs ? ES.ui : null;
+
+  var titles = isEs
+    ? {nest: ui.comp_nest, rise: ui.comp_rise, soar: ui.comp_soar}
+    : {nest:'You did it! You soared! 🌟',rise:'You soared today! Well done.',soar:'You showed up. That matters.'};
+  var subs = isEs
+    ? {nest: ui.comp_sub_nest, rise: ui.comp_sub_rise, soar: ui.comp_sub_soar}
+    : {nest:'God delights in you — Psalm 147:11.',rise:'All four steps. Well done.',soar:'Seek · Open · Act · Respond.'};
+  var sm = isEs
+    ? (str.count===1 ? (ui.streak_first || 'Primer día — ¡gran comienzo!') : str.count + (ui.streak_days || ' días seguidos.'))
+    : (str.count===1?'First day — great start!':str.count+' days in a row!');
+  var wordForYouLbl = isEs ? (ui.word_for_you || 'Una palabra para ti') : 'A word for you';
+  var tryNextLbl = isEs ? 'Intenta después' : 'Try next';
+  var comeBackTitle = isEs ? (ui.come_back || 'Regresa mañana — sigue creciendo') : 'Come back tomorrow — keep growing';
+  var comeBackSub = isEs ? (ui.come_back_sub || 'Cada día que abres SPARROW Jr. es otro momento para encontrarte con Dios. Él estará aquí. ¿Misma hora mañana?') : 'Every day you open SPARROW Jr. is another moment to meet God. He will be here. Same time tomorrow?';
+  var readyDeeperLbl = isEs ? (ui.ready_deeper || '¿Listo para ir más profundo?') : 'Ready to go deeper?';
+  var bridgeDescTxt = isEs ? (ui.bridge_desc || 'SPARROW Jr. está diseñado para crecer contigo hacia SPARROW.') : 'SPARROW is the next step — the adult faith companion built on the same Biblical Alignment System. Ask a parent or your youth minister when you are ready.';
+  var chooseTopicLbl = isEs ? (ui.choose_topic || 'Elige un tema') : 'Choose a topic';
+  var homeLbl = isEs ? (ui.home || 'Inicio') : 'Home';
 
   var nextSec=nt?'<div class="comp-next" data-tid="'+nt.id+'"  role="button" tabindex="0" aria-label="Try '+nt.name+'">'
     +'<span class="nx-emoji">'+nt.emoji+'</span>'
-    +'<div><div class="nx-lbl">Try next</div><div class="nx-name">'+nt.name+'</div></div>'
+    +'<div><div class="nx-lbl">'+tryNextLbl+'</div><div class="nx-name">'+nt.name+'</div></div>'
     +'<span class="nx-arr">›</span></div>':'';
-  var bridgeSec=AGE==='soar'?'<div class="teen-bridge" style="width:calc(100% - 36px);margin:12px auto 0;box-sizing:border-box"><span class="tb-icon">🦅</span><div><div class="tb-label">Ready to go deeper?</div><div class="tb-desc">SPARROW is the next step — the adult faith companion built on the same Biblical Alignment System. Ask a parent or your youth minister when you are ready.</div></div></div>':'';
+  var bridgeSec=AGE==='soar'?'<div class="teen-bridge" style="width:calc(100% - 36px);margin:12px auto 0;box-sizing:border-box"><span class="tb-icon">🦅</span><div><div class="tb-label">'+readyDeeperLbl+'</div><div class="tb-desc">'+bridgeDescTxt+'</div></div></div>':'';
 
   document.getElementById('comp-body').innerHTML=
     '<div class="comp-banner">'
@@ -1398,13 +1420,13 @@ function finishSession(){
     +'<p class="comp-ref">'+cv.ref+'</p>'
     +'</div>'
     +'<div class="comp-streak"><span class="streak-flame">🔥</span><div><div class="streak-n">'+str.count+'</div><div class="streak-lbl">'+sm+'</div><div class="streak-dots">'+dotHtml(Math.min(str.count,7))+'</div></div></div>'
-    +'<div class="comp-enc"><div class="enc-lbl">A word for you</div><div class="enc-txt">'+enc+'</div></div>'
-    +'<div class="comp-return"><span class="ret-sparrow">🦅</span><div><div class="ret-title">Come back tomorrow — keep growing</div><div class="ret-sub">Every day you open SPARROW Jr. is another moment to meet God. He will be here. Same time tomorrow?</div></div></div>'
+    +'<div class="comp-enc"><div class="enc-lbl">'+wordForYouLbl+'</div><div class="enc-txt">'+enc+'</div></div>'
+    +'<div class="comp-return"><span class="ret-sparrow">🦅</span><div><div class="ret-title">'+comeBackTitle+'</div><div class="ret-sub">'+comeBackSub+'</div></div></div>'
     +nextSec+bridgeSec;
 
   var fr=document.getElementById('comp-btns');fr.innerHTML='';
-  var b1=document.createElement('button');b1.className='btn-g';b1.style.flex='1';b1.textContent='Choose a topic';b1.onclick=function(){goTo('screen-topics');};
-  var b2=document.createElement('button');b2.className='btn-s';b2.style.padding='16px 14px';b2.textContent='Home';b2.onclick=function(){goTo('screen-welcome');};
+  var b1=document.createElement('button');b1.className='btn-g';b1.style.flex='1';b1.textContent=chooseTopicLbl;b1.onclick=function(){goTo('screen-topics');};
+  var b2=document.createElement('button');b2.className='btn-s';b2.style.padding='16px 14px';b2.textContent=homeLbl;b2.onclick=function(){goTo('screen-welcome');};
   fr.appendChild(b1);fr.appendChild(b2);
 
   goTo('screen-complete');
@@ -1610,6 +1632,7 @@ function setLang(lang) {
       var d=card.querySelector('.card-desc');if(d)d.textContent=c[3];});
   }
   buildGrid();
+  applyNavLanguage();
 }
 
 var _bg0=buildGrid;
@@ -2120,6 +2143,7 @@ function buildSystemPrompt(topicId, age, lang) {
     'RULE 6 — OUTPUT FORMAT (STRICT).',
     '════════════════════════════════',
     'Return ONLY valid JSON. No preamble. No explanation. No markdown fences.',
+    'CRITICAL LANGUAGE REMINDER: every single text value in this JSON — the verse text, the story, the question, the choices, the action steps, the prayer, every field without exception — must be written in ' + langName + '. This has been a real, repeated failure point. Do not default to English. Check each field before finishing.',
     'The JSON must have exactly this structure:',
     '',
     '{',
@@ -2688,6 +2712,7 @@ selectTopic = function(id) {
   STEP = 's';
   resetSteps();
   goTo('screen-daily');
+  applyNavLanguage();
   ann('You chose: ' + TOPIC.name + '. Getting your session ready.');
 
   // Clear any leftover retry block from a previous failed attempt on this
@@ -3028,6 +3053,29 @@ function toggleSoarQuestion() {
   // affect a Soaring teen's default, and vice versa
   var prefKey = 'sparrow_jr_q_expand_pref_' + (AGE || 'rise');
   try { localStorage.setItem(prefKey, nowOpen ? 'yes' : 'no'); } catch(e) {}
+}
+
+function applyNavLanguage() {
+  // Updates the navigation chrome — Back/Next buttons — that appear on
+  // every lesson screen. These had real Spanish translations sitting
+  // unused in ES.ui (next_open, next_action, next_prayer, back, back_topics)
+  // but were never wired to anything, so they stayed in English regardless
+  // of the selected language. This is the single place that applies them.
+  var isEs = (LANG === 'es' && typeof ES !== 'undefined' && ES.ui);
+  var ui = isEs ? ES.ui : null;
+
+  var _set = function(id, esText, enText) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = isEs ? esText : enText;
+  };
+
+  _set('nav-back-home',  ui ? ui.back : null, '\u2190 Back');
+  _set('nav-back-topics', ui ? (ui.back_topics || '\u2190 Temas') : null, '\u2190 Topics');
+  _set('nav-next-o', ui ? ui.next_open : null, 'Next: Open Your Heart \u2192');
+  _set('nav-back-s', ui ? ui.back : null, '\u2190 Back');
+  _set('nav-next-a', ui ? ui.next_action : null, 'Next: Action \u2192');
+  _set('nav-back-o', ui ? ui.back : null, '\u2190 Back');
+  _set('nav-next-r', ui ? ui.next_prayer : null, 'Next: Prayer \u2192');
 }
 </script>
 </body>
