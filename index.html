@@ -2548,15 +2548,24 @@ console.log('SPARROW Jr. Dynamic Content Engine loaded. Bible-only. Age-guarded.
 })();
 
 function submitJournalResponse() {
+  console.log('[SPARROW Jr] submitJournalResponse called');
   var ta = document.querySelector('#step-o .journal-ta');
-  if (!ta || !ta.value.trim()) return;
+  console.log('[SPARROW Jr] textarea found:', !!ta, 'value:', ta ? ta.value : 'N/A');
+  if (!ta || !ta.value.trim()) { console.log('[SPARROW Jr] No textarea or empty value — exiting'); return; }
   var response = ta.value.trim();
   var topicName = TOPIC ? TOPIC.name : 'this topic';
   var age = AGE || 'rise';
 
-  // Show loading state
+  // Show loading state — create the card if it doesn't exist yet
   var card = document.getElementById('soar-response-card');
-  if (!card) return;
+  console.log('[SPARROW Jr] response card found:', !!card);
+  if (!card) {
+    // Card missing — create it right after the textarea's parent
+    card = document.createElement('div');
+    card.id = 'soar-response-card';
+    ta.parentNode.appendChild(card);
+    console.log('[SPARROW Jr] response card created dynamically');
+  }
   card.style.display = 'block';
   card.style.cssText = 'display:block;background:#F0F7F0;border-left:3px solid #4A7C59;border-radius:0 12px 12px 0;padding:14px 16px;margin-top:12px;animation:fadeUp .3s ease both;';
   card.innerHTML = '<p style="font-size:13px;color:#4A7C59;font-style:italic;">Soar is listening\u2026 \uD83D\uDD4A\uFE0F</p>';
@@ -2575,6 +2584,8 @@ function submitJournalResponse() {
     ? origin + '/.netlify/functions/anthropic'
     : '/.netlify/functions/anthropic';
 
+  console.log('[SPARROW Jr] fetching:', url);
+
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -2584,18 +2595,92 @@ function submitJournalResponse() {
       messages: [{ role: 'user', content: prompt }]
     })
   })
-  .then(function(r){ return r.json(); })
+  .then(function(r){ console.log('[SPARROW Jr] response status:', r.status); return r.json(); })
   .then(function(data){
+    console.log('[SPARROW Jr] response data:', data);
     var text = data.content && data.content[0] && data.content[0].text
       ? data.content[0].text.trim()
       : 'Thank you for sharing that. God sees your heart, and He is so glad you are here today.';
     card.innerHTML = '<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;"><strong style="color:#4A7C59;">\uD83D\uDD4A\uFE0F Soar:</strong> ' + text + '</p>';
     if (TTS && TTS.speakDirect) setTimeout(function(){ TTS.speakDirect(text); }, 300);
   })
-  .catch(function(){
+  .catch(function(err){
+    console.log('[SPARROW Jr] fetch error:', err);
     card.innerHTML = '<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;"><strong style="color:#4A7C59;">\uD83D\uDD4A\uFE0F Soar:</strong> Thank you for sharing that. God sees your heart, and He is so glad you are here today. Keep going \u2014 the next step is waiting for you.</p>';
   });
 }
+
+/* ── FLAG FOR REVIEW ───────────────────────────────────────────
+   Lets the ministry team flag an AI-generated lesson for manual
+   review. Stored locally so it can be exported and checked.
+─────────────────────────────────────────────────────────────── */
+function flagForReview() {
+  if (!window._dynSession || !TOPIC) {
+    alert('No AI-generated content to flag on this screen.');
+    return;
+  }
+  var flags = [];
+  try { flags = JSON.parse(localStorage.getItem('sparrow_jr_flags') || '[]'); } catch(e) {}
+
+  flags.unshift({
+    date: new Date().toISOString(),
+    topicId: TOPIC.id,
+    topicName: TOPIC.name,
+    age: AGE,
+    lang: LANG || 'en',
+    session: window._dynSession
+  });
+
+  // Keep the most recent 50 flags
+  flags = flags.slice(0, 50);
+
+  try { localStorage.setItem('sparrow_jr_flags', JSON.stringify(flags)); } catch(e) {}
+
+  var btn = document.getElementById('flag-review-btn');
+  if (btn) {
+    btn.textContent = '\u2713 Flagged for review';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+  }
+}
+
+function exportFlags() {
+  var flags = [];
+  try { flags = JSON.parse(localStorage.getItem('sparrow_jr_flags') || '[]'); } catch(e) {}
+  if (!flags.length) { alert('No flagged lessons to export.'); return; }
+
+  var lines = ['SPARROW Jr. — Flagged Lessons for Review', 'Exported: ' + new Date().toLocaleDateString(), '\u2550'.repeat(50), ''];
+  flags.forEach(function(f, i) {
+    lines.push('--- Flag ' + (i+1) + ' ---');
+    lines.push('Date: ' + new Date(f.date).toLocaleString());
+    lines.push('Topic: ' + f.topicName + ' (' + f.topicId + ')');
+    lines.push('Age Group: ' + f.age);
+    lines.push('Language: ' + f.lang);
+    lines.push('');
+    lines.push('Verse: ' + (f.session.verse ? f.session.verse.ref + ' \u2014 ' + f.session.verse.text : 'n/a'));
+    lines.push('');
+    lines.push('Story:');
+    lines.push(f.session.story || 'n/a');
+    lines.push('');
+    lines.push('Question: ' + (f.session.question ? f.session.question.text : 'n/a'));
+    lines.push('Action: ' + (f.session.action ? f.session.action.title + ' \u2014 ' + f.session.action.detail : 'n/a'));
+    lines.push('Prayer: ' + (f.session.prayer || 'n/a'));
+    lines.push('');
+    lines.push('\u2500'.repeat(50));
+    lines.push('');
+  });
+
+  var blob = new Blob([lines.join('\n')], {type:'text/plain;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'SPARROW-Jr-Flagged-Lessons-' + new Date().toISOString().slice(0,10) + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 </script>
 </body>
 </html>
