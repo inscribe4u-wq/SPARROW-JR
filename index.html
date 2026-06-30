@@ -2315,18 +2315,36 @@ function populateDynamic(session, topicId, age, lang) {
   var paras = session.story.split('\n\n').map(function(p){
     return '<p class="' + tc + '" style="margin-bottom:14px">' + p + '</p>';
   }).join('');
-  // Defensive backstop: even though the AI is instructed to keep verse
-  // selection short, this guards the actual screen in case a longer
-  // passage ever slips through, so no child is shown a wall of scripture.
+  // Some topics naturally pull a single short verse; others (like parables —
+  // Luke 10:25-37, the Good Samaritan) pull a longer narrative passage that
+  // is appropriately long AS SCRIPTURE but heavy to show open by default on
+  // a small screen. We never truncate Scripture mid-sentence — that would
+  // misrepresent it. Instead, longer passages collapse behind a tap, the
+  // same Go-Deeper pattern used elsewhere, so the full passage is always
+  // available but never forced onto the screen as a wall of text.
   var _verseText = session.verse.text || '';
   var _verseWords = _verseText.split(/\s+/);
-  if (_verseWords.length > 45) {
-    _verseText = _verseWords.slice(0, 45).join(' ') + '\u2026';
+  var _isLongPassage = _verseWords.length > 45;
+
+  var scrBlock;
+  if (!_isLongPassage) {
+    scrBlock = '<div class="scripture-block">'
+      + '<p class="scripture-text">"' + _verseText + '"</p>'
+      + '<p class="scripture-ref">' + session.verse.ref + '</p>'
+      + '</div>';
+  } else {
+    // Show only the first complete sentence as a preview, never a hard word cutoff
+    var _sentenceMatch = _verseText.match(/^.*?[.!?]/);
+    var _preview = _sentenceMatch ? _sentenceMatch[0] : _verseWords.slice(0, 20).join(' ') + '\u2026';
+    var _versePreviewId = 'verse-preview-' + Date.now();
+    var _verseFullId = 'verse-full-' + Date.now();
+    scrBlock = '<div class="scripture-block">'
+      + '<p class="scripture-text" id="' + _versePreviewId + '">"' + _preview + '" <span style="opacity:.6">\u2026</span></p>'
+      + '<p class="scripture-text" id="' + _verseFullId + '" style="display:none;">"' + _verseText + '"</p>'
+      + '<button onclick="(function(){var p=document.getElementById(\'' + _versePreviewId + '\');var f=document.getElementById(\'' + _verseFullId + '\');var b=event.target;if(f.style.display===\'none\'){f.style.display=\'block\';p.style.display=\'none\';b.textContent=\'Show Less \u2191\';}else{f.style.display=\'none\';p.style.display=\'block\';b.textContent=\'Read the Full Passage \u2192\';}})()" style="background:none;border:none;color:var(--forest);font-size:13px;font-weight:700;text-decoration:underline;cursor:pointer;padding:4px 0;margin-bottom:8px;">Read the Full Passage \u2192</button>'
+      + '<p class="scripture-ref">' + session.verse.ref + '</p>'
+      + '</div>';
   }
-  var scrBlock = '<div class="scripture-block">'
-    + '<p class="scripture-text">"' + _verseText + '"</p>'
-    + '<p class="scripture-ref">' + session.verse.ref + '</p>'
-    + '</div>';
 
   // Bible ref badge — shows which passage the AI drew from
   var refBadge = session.bibleRef
