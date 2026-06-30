@@ -2655,6 +2655,16 @@ selectTopic = function(id) {
   goTo('screen-daily');
   ann('You chose: ' + TOPIC.name + '. Getting your session ready.');
 
+  // Clear any leftover retry block from a previous failed attempt on this
+  // or a different topic — without this, "Connecting to God's Word" stays
+  // stuck on screen permanently even after a later attempt succeeds,
+  // since nothing ever removed it once the real content loaded above it.
+  document.querySelectorAll('#screen-daily > div').forEach(function(el){
+    if (el.textContent && el.textContent.indexOf('Connecting to God') !== -1) {
+      el.remove();
+    }
+  });
+
   // All topics go through the AI — emotion topics have local fallback
   showLoadingOverlay(AGE, id, LANG);
   console.log('[SPARROW] calling Anthropic function for:', id);
