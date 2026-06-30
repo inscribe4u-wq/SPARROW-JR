@@ -1584,7 +1584,7 @@ function setLang(lang) {
   if(eb)eb.classList.toggle('active',lang==='en');
   if(sb)sb.classList.toggle('active',lang==='es');
   if(lang==='en'){
-    var sub=document.querySelector('.welcome-sub');if(sub)sub.textContent='Seek · Open · Act · Respond';
+    // .welcome-sub now holds the "Meet God in the Moment" tagline, set once in HTML — no longer overwritten with the SOAR acronym, which collided with it after the tagline was added.
     var tag=document.querySelector('.welcome-tag');if(tag)tag.textContent='A children’s faith companion that grows with you.';
     var lbl=document.querySelector('.age-label');if(lbl)lbl.textContent='Who is reading today?';
     [['card-nest','Ages 4–7','Nestlings','Safe in the nest · With a grown-up'],
@@ -1596,7 +1596,7 @@ function setLang(lang) {
       var d=card.querySelector('.card-desc');if(d)d.textContent=c[3];});
   } else {
     var ui=ES.ui;
-    var sub2=document.querySelector('.welcome-sub');if(sub2)sub2.textContent=ui.subtitle;
+    var sub2=document.querySelector('.welcome-sub');if(sub2)sub2.textContent='Encuentra a Dios en el Momento';
     var tag2=document.querySelector('.welcome-tag');if(tag2)tag2.textContent=ui.tagline;
     var lbl2=document.querySelector('.age-label');if(lbl2)lbl2.textContent=ui.who_reading;
     [['card-nest','Edades 4–7',ui.nest_name,ui.nest_desc],
