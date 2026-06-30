@@ -2396,15 +2396,43 @@ function populateDynamic(session, topicId, age, lang) {
     window._dynChoiceAck = q.choice_ack || {};
     // Fill any missing keys with a gentle default
     q.choices.forEach(function(c){ if(!window._dynChoiceAck[c.l]) window._dynChoiceAck[c.l] = 'Thank you for sharing that. God sees exactly how you feel, and He cares so much about you.'; });
+  } else if (age === 'soar') {
+    // Soaring (13-17): collapsed by default, expands into the full writing
+    // experience on tap — mirrors the Go Deeper pattern from SPARROW Adult
+    // that teens transitioning toward it already recognize and trust.
+    var writePh = ui ? ui.write_ph : 'Write here\u2026';
+    var crisis  = ui ? ui.crisis   : 'If you are carrying something heavy that feels too big to hold alone, please talk to a trusted adult or your youth minister.' + ' You can also call or text 988 anytime \u2014 it\u2019s free, confidential, and there is always someone ready to listen.';
+
+    var soarPrefKey = 'sparrow_jr_soar_expand_pref';
+    var soarPref = ''; try { soarPref = localStorage.getItem(soarPrefKey) || ''; } catch(e) {}
+    var startExpanded = (soarPref === 'yes');
+
+    rEl.innerHTML = '<button id="soar-q-toggle" onclick="toggleSoarQuestion()" style="width:100%;background:' + (startExpanded ? 'rgba(74,124,89,0.08)' : '#4A7C59') + ';color:' + (startExpanded ? '#4A7C59' : '#fff') + ';border:1.5px solid #4A7C59;border-radius:30px;padding:13px 22px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:14px;transition:background .2s,color .2s;">'
+      + (startExpanded ? 'Hide Reflection \u2191' : 'Reflect on This \u2192')
+      + '</button>'
+      + '<div id="soar-q-content" style="display:' + (startExpanded ? 'block' : 'none') + ';">'
+      + '<div class="journal-area">'
+      + '<p class="journal-prompt">' + (q.prompt || writePh) + '</p>'
+      + '<textarea class="journal-ta" placeholder="' + writePh + '" aria-label="Your response" rows="4" data-jkey="' + jk + '"></textarea>'
+      + '<button onclick="submitJournalResponse()" style="width:100%;margin-top:10px;background:#4A7C59;color:#fff;border:none;border-radius:30px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;">Share with Soar \uD83D\uDD4A\uFE0F</button>'
+      + '<div id="soar-response-card" style="display:none;"></div>'
+      + '<p id="crisis-note">' + crisis + '</p>'
+      + '</div>'
+      + '</div>';
+
+    setTimeout(function(){
+      var ta = document.querySelector('#step-o .journal-ta');
+      if (ta) ta.addEventListener('input', function(){
+        try { localStorage.setItem(jk, this.value); } catch(e) {}
+      });
+    }, 80);
   } else {
     var writePh = ui ? ui.write_ph : 'Write here\u2026';
-    var crisis  = ui ? ui.crisis   : 'If you are carrying something heavy that feels too big to hold alone, please talk to a trusted adult or your youth minister.' + (age==='soar' ? ' You can also call or text 988 anytime \u2014 it\u2019s free, confidential, and there is always someone ready to listen.' : '');
     rEl.innerHTML = '<div class="journal-area">'
       + '<p class="journal-prompt">' + (q.prompt || writePh) + '</p>'
       + '<textarea class="journal-ta" placeholder="' + writePh + '" aria-label="Your response" rows="4" data-jkey="' + jk + '"></textarea>'
       + '<button onclick="submitJournalResponse()" style="width:100%;margin-top:10px;background:#4A7C59;color:#fff;border:none;border-radius:30px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;">Share with Soar \uD83D\uDD4A\uFE0F</button>'
       + '<div id="soar-response-card" style="display:none;"></div>'
-      + (age === 'soar' ? '<p id="crisis-note">' + crisis + '</p>' : '')
       + '</div>';
     setTimeout(function(){
       var ta = document.querySelector('#step-o .journal-ta');
@@ -2822,6 +2850,22 @@ function exportFlags() {
   URL.revokeObjectURL(url);
 }
 
+
+function toggleSoarQuestion() {
+  var content = document.getElementById('soar-q-content');
+  var btn = document.getElementById('soar-q-toggle');
+  if (!content || !btn) return;
+
+  var isOpen = content.style.display !== 'none';
+  var nowOpen = !isOpen;
+
+  content.style.display = nowOpen ? 'block' : 'none';
+  btn.style.background = nowOpen ? 'rgba(74,124,89,0.08)' : '#4A7C59';
+  btn.style.color = nowOpen ? '#4A7C59' : '#fff';
+  btn.textContent = nowOpen ? 'Hide Reflection \u2191' : 'Reflect on This \u2192';
+
+  try { localStorage.setItem('sparrow_jr_soar_expand_pref', nowOpen ? 'yes' : 'no'); } catch(e) {}
+}
 </script>
 </body>
 </html>
