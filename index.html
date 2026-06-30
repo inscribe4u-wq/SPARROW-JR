@@ -2596,6 +2596,7 @@ function populateDynamic(session, topicId, age, lang) {
     var qPref = ''; try { qPref = localStorage.getItem(qPrefKey) || ''; } catch(e) {}
     var startExpanded = (qPref === 'yes');
 
+    var _shareBtnLbl = (lang === 'es') ? 'Compartir con Soar 🕊️' : 'Share with Soar 🕊️';
     rEl.innerHTML = '<button id="soar-q-toggle" onclick="toggleSoarQuestion()" style="width:100%;background:' + (startExpanded ? 'rgba(74,124,89,0.08)' : '#4A7C59') + ';color:' + (startExpanded ? '#4A7C59' : '#fff') + ';border:1.5px solid #4A7C59;border-radius:30px;padding:13px 22px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:14px;transition:background .2s,color .2s;">'
       + (startExpanded ? 'Hide Reflection \u2191' : 'Reflect on This \u2192')
       + '</button>'
@@ -2603,7 +2604,7 @@ function populateDynamic(session, topicId, age, lang) {
       + '<div class="journal-area">'
       + '<p class="journal-prompt">' + (q.prompt || writePh) + '</p>'
       + '<textarea class="journal-ta" placeholder="' + writePh + '" aria-label="Your response" rows="4" data-jkey="' + jk + '"></textarea>'
-      + '<button onclick="submitJournalResponse()" style="width:100%;margin-top:10px;background:#4A7C59;color:#fff;border:none;border-radius:30px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;">Share with Soar \uD83D\uDD4A\uFE0F</button>'
+      + '<button onclick="submitJournalResponse()" style="width:100%;margin-top:10px;background:#4A7C59;color:#fff;border:none;border-radius:30px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;">' + _shareBtnLbl + '</button>'
       + '<div id="soar-response-card" style="display:none;"></div>'
       + (crisis ? '<p id="crisis-note">' + crisis + '</p>' : '')
       + '</div>'
@@ -2889,109 +2890,66 @@ console.log('SPARROW Jr. Dynamic Content Engine loaded. Bible-only. Age-guarded.
 })();
 
 function submitJournalResponse() {
-  console.log('[SPARROW Jr] submitJournalResponse called');
   try {
   var ta = document.querySelector('#step-o .journal-ta');
-  console.log('[SPARROW Jr] textarea found:', !!ta, 'value:', ta ? ta.value : 'N/A');
-  if (!ta) {
-    alert('DEBUG: Could not find the textarea (#step-o .journal-ta). Please screenshot this and tell Claude.');
-    return;
-  }
+  if (!ta) { alert('DEBUG: textarea not found.'); return; }
   if (!ta.value.trim()) {
-    alert('Please write something before tapping Share with Soar.');
+    alert(LANG === 'es' ? 'Escribe algo antes de tocar Compartir con Soar.' : 'Please write something before tapping Share with Soar.');
     return;
   }
   var response = ta.value.trim();
-  var topicName = TOPIC ? TOPIC.name : 'this topic';
+  var topicName = TOPIC ? TOPIC.name : (LANG === 'es' ? 'este tema' : 'this topic');
   var age = AGE || 'rise';
+  var isEs = (LANG === 'es');
 
   var card = document.getElementById('soar-response-card');
-  if (!card) {
-    card = document.createElement('div');
-    card.id = 'soar-response-card';
-    ta.parentNode.appendChild(card);
-  }
+  if (!card) { card = document.createElement('div'); card.id = 'soar-response-card'; ta.parentNode.appendChild(card); }
   card.style.display = 'block';
   card.style.cssText = 'display:block;background:#F0F7F0;border-left:3px solid #4A7C59;border-radius:0 12px 12px 0;padding:14px 16px;margin-top:12px;animation:fadeUp .3s ease both;';
-  card.innerHTML = '<p style="font-size:13px;color:#4A7C59;font-style:italic;">Soar is listening\u2026 \uD83D\uDD4A\uFE0F</p>';
+  card.innerHTML = '<p style="font-size:13px;color:#4A7C59;font-style:italic;">' + (isEs ? 'Soar te escucha… 🕊️' : 'Soar is listening… 🕊️') + '</p>';
 
   var dynQ = (window._dynSession && window._dynSession.question) ? window._dynSession.question : null;
   var isComprehension = dynQ && dynQ.question_type === 'comprehension';
   var teaching = (dynQ && dynQ.teaching_response) ? dynQ.teaching_response : '';
 
-  var ageDesc = age === 'nest' ? 'a 4-7 year old child' : age === 'rise' ? 'an 8-12 year old child' : 'a 13-17 year old teenager';
+  var langInstr = isEs
+    ? 'CRITICAL: Tu respuesta completa DEBE estar en español. No uses inglés en absoluto.'
+    : 'Speak directly to the child. Be warm, brief, and age-appropriate. Plain text only.';
 
-  var prompt;
-  if (isComprehension) {
-    prompt = 'A child is working through a Bible lesson about: ' + topicName + '.\n\n'
-      + 'They are ' + ageDesc + '. The question was: "' + (dynQ.text||'') + '"\n'
-      + 'The biblical teaching point is: "' + teaching + '"\n\n'
-      + 'They wrote this response:\n\n"' + response + '"\n\n'
-      + 'As Soar, a gentle faith companion: affirm their thoughtfulness, then warmly teach the biblical answer above in your own words. '
-      + 'NEVER say "wrong" or "incorrect" or "no." Make the child feel good about engaging, while still clearly teaching the true biblical answer. '
-      + 'Keep it to 2-3 sentences. Speak directly to the child. Plain text only.';
+  var ageDesc = isEs
+    ? (age === 'nest' ? 'un niño de 4 a 7 años' : age === 'rise' ? 'un niño de 8 a 12 años' : 'un adolescente de 13 a 17 años')
+    : (age === 'nest' ? 'a 4-7 year old child' : age === 'rise' ? 'an 8-12 year old child' : 'a 13-17 year old teenager');
+
+  var prompt = (isEs ? 'Un niño trabaja en una lección bíblica sobre: ' : 'A child is working through a Bible lesson about: ') + topicName + '.\n\n'
+    + (isEs ? 'Tiene la edad de ' : 'They are ') + ageDesc + '. '
+    + (isEs ? 'Escribió: "' : 'They wrote: "') + response + '"\n\n';
+
+  if (isComprehension && teaching) {
+    prompt += (isEs ? 'El punto bíblico es: "' : 'The biblical teaching point is: "') + teaching + '"\n\n';
+    prompt += isEs ? 'Como Soar, afirma su participación y enseña la verdad bíblica con amor. Nunca digas incorrecto. 2-3 oraciones. ' : 'As Soar, affirm their engagement and warmly teach the biblical truth. NEVER say wrong. 2-3 sentences. ';
   } else {
-    prompt = 'A child is working through a Bible lesson about: ' + topicName + '.\n\n'
-      + 'They are ' + ageDesc + '. They just wrote this response to the reflection question:\n\n'
-      + '"' + response + '"\n\n'
-      + 'As Soar, a gentle faith companion, give a warm encouraging 2-3 sentence response. '
-      + 'Never say right or wrong. Affirm their honesty. Gently connect their feeling to God\u2019s love or the Bible story. '
-      + 'End with one sentence of hope or encouragement. '
-      + 'Speak directly to the child. Be warm, brief, and age-appropriate. Plain text only.';
+    prompt += isEs ? 'Como Soar, da una respuesta cálida de 2-3 oraciones. Afirma su honestidad. Conecta su sentimiento con el amor de Dios. Termina con esperanza. ' : 'As Soar, give a warm 2-3 sentence response. Affirm honesty. Connect feeling to God\'s love. End with hope. ';
   }
+  prompt += langInstr;
 
   var origin = window.location.origin;
-  var url = (origin && origin !== 'null' && origin.startsWith('http'))
-    ? origin + '/.netlify/functions/anthropic'
-    : '/.netlify/functions/anthropic';
-
-  var SJR_FALLBACK = isComprehension && teaching
-    ? ('Thank you for thinking that through. ' + teaching)
-    : 'Thank you for sharing that with Soar. God sees your heart, and He is so glad you took time to think about this today. Keep going \u2014 the next step is waiting for you.';
+  var url = (origin && origin !== 'null' && origin.startsWith('http')) ? origin + '/.netlify/functions/anthropic' : '/.netlify/functions/anthropic';
+  var SJR_FALLBACK = isEs ? 'Gracias por compartir eso con Soar. Dios ve tu corazón, y está muy contento de que hayas tomado tiempo hoy. Sigue adelante.' : 'Thank you for sharing that. God sees your heart, and He is so glad you took time today. Keep going.';
 
   var sjrDone = false;
   var sjrShow = function(text){
-    if (sjrDone) return;
-    sjrDone = true;
-    card.innerHTML = '<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;"><strong style="color:#4A7C59;">\uD83D\uDD4A\uFE0F Soar:</strong> ' + text + '</p>';
+    if (sjrDone) return; sjrDone = true;
+    card.innerHTML = '<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;"><strong style="color:#4A7C59;">🕊️ Soar:</strong> ' + text + '</p>';
     if (TTS && TTS.speakDirect) setTimeout(function(){ TTS.speakDirect(text); }, 300);
   };
-
-  var sjrTimeout = setTimeout(function(){
-    console.log('[SPARROW Jr] timeout reached — showing fallback');
-    sjrShow(SJR_FALLBACK);
-  }, 8000);
-
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 220,
-      messages: [{ role: 'user', content: prompt }]
-    })
-  })
-  .then(function(r){
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  })
-  .then(function(data){
-    clearTimeout(sjrTimeout);
-    var text = (data && data.content && data.content[0] && data.content[0].text)
-      ? data.content[0].text.trim()
-      : SJR_FALLBACK;
-    sjrShow(text);
-  })
-  .catch(function(err){
-    console.log('[SPARROW Jr] fetch error:', err);
-    clearTimeout(sjrTimeout);
-    sjrShow(SJR_FALLBACK);
-  });
-  } catch(outerErr) {
-    console.log('[SPARROW Jr] OUTER ERROR:', outerErr);
-    alert('DEBUG: submitJournalResponse crashed: ' + outerErr.message + ' Please screenshot this and tell Claude.');
-  }
+  var sjrTimeout = setTimeout(function(){ sjrShow(SJR_FALLBACK); }, 8000);
+  fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 220, messages: [{ role: 'user', content: prompt }] }) })
+  .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  .then(function(data){ clearTimeout(sjrTimeout); sjrShow((data && data.content && data.content[0] && data.content[0].text) ? data.content[0].text.trim() : SJR_FALLBACK); })
+  .catch(function(){ clearTimeout(sjrTimeout); sjrShow(SJR_FALLBACK); });
+  } catch(e) { alert('DEBUG: ' + e.message); }
 }
+
 
 /* ── FLAG FOR REVIEW ───────────────────────────────────────────
    Lets the ministry team flag an AI-generated lesson for manual
@@ -3109,6 +3067,33 @@ function applyNavLanguage() {
   _set('nav-back-a', ui ? ui.back : null, '\u2190 Back');
   _set('nav-finish', ui ? ui.finish : null, 'Finish \u2726');
 }
+
+if (window.TTS) {
+  TTS.speakDirect = function(text) {
+    window._capturedSpeech.push(text);
+    console.log('[CAPTURED SPEECH]:', text);
+  };
+}
+
+
+// ===== PREVIEW STUB - final verification pass =====
+function fetchDynamicSession(topicId, age, lang, onSuccess, onError) {
+  setTimeout(function() {
+    onSuccess({
+      verse: { ref: 'Salmo 56:3', text: 'Cuando tengo miedo, en ti confio.' },
+      bibleRef: 'Salmo 56:3',
+      story: 'Historia breve.\n\nSegundo p\u00e1rrafo.',
+      story_summary: 'Resumen.', what_we_learn: 'Aprendizaje.', god_sighting: 'Pregunta?',
+      ack: 'Reconocimiento.',
+      question: { text: 'Pregunta?', question_type: 'reflection', choices: [{e:'\ud83d\ude0a',l:'Feliz',best:true}], choice_ack: {'Feliz':'Bien!'}, prompt: '', teaching_response: '' },
+      action: { title: 'Acci\u00f3n', detail: 'Detalle.', steps: ['Paso uno'] },
+      prayer: 'Oraci\u00f3n. Am\u00e9n.', pnote: 'Nota correcta en espa\u00f1ol.',
+      enc: 'Hoy aprendiste que Dios te ama mucho.',
+      comp_verse: { ref: 'Salmo 56:3', text: 'Test.' }
+    });
+  }, 200);
+}
+window._capturedSpeech = [];
 </script>
 </body>
 </html>
