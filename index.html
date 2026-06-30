@@ -509,6 +509,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         </div>
         <div class="story-scene" id="story-scene" aria-hidden="true"></div>
         <div id="story-content"></div>
+        <div id="story-summary-learn"></div>
         <div id="story-pnote"></div>
       </div>
       <div class="nav-row"><button class="btn-p" onclick="nextStep('o')">Next: Open Your Heart →</button></div>
@@ -543,6 +544,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
           <div class="ac-detail" id="ac-detail"></div>
         </div>
         <div class="action-steps" id="action-steps"></div>
+        <div id="god-sighting"></div>
       </div>
       <div class="nav-row">
         <button class="btn-s" onclick="nextStep('o')">← Back</button>
@@ -1264,28 +1266,47 @@ function pickChoice(btn,ev){
     btn.appendChild(rp);setTimeout(function(){rp.remove();},700);
     burst(ev.clientX,ev.clientY,10);
   }
-  btn.closest('.q-choices').querySelectorAll('.q-choice').forEach(function(b){b.classList.remove('sel');b.setAttribute('aria-pressed','false');});
+  btn.closest('.q-choices').querySelectorAll('.q-choice').forEach(function(b){b.classList.remove('sel');b.classList.remove('q-best');b.classList.remove('q-grow');b.setAttribute('aria-pressed','false');});
   btn.classList.add('sel');btn.setAttribute('aria-pressed','true');
-  if(AGE!=='nest'||!TOPIC)return;
+  if(!TOPIC)return;
   var lb=btn.querySelector('.c-label');if(!lb)return;
   var label=lb.textContent.trim();
-  // Try static CHOICE_ACK first, then dynamic session choice_ack
+
+  // Determine if this is a comprehension question with a best/not-best answer
+  var dynQ = (window._dynSession && window._dynSession.question) ? window._dynSession.question : null;
+  var isComprehension = dynQ && dynQ.question_type === 'comprehension';
+  var pickedBest = null;
+  if (isComprehension && dynQ.choices) {
+    for (var i=0;i<dynQ.choices.length;i++){
+      if (dynQ.choices[i].l === label) { pickedBest = !!dynQ.choices[i].best; break; }
+    }
+    btn.classList.add(pickedBest ? 'q-best' : 'q-grow');
+  }
+
+  // Resolve the response text
   var ack=null;
   var ta=CHOICE_ACK[TOPIC.id];
   if(ta&&ta[label]){ack=ta[label];}
   else if(window._dynChoiceAck&&window._dynChoiceAck[label]){ack=window._dynChoiceAck[label];}
   else{ack='Thank you for sharing that. God sees exactly how you feel, and He loves you so much.';}
+
+  // For comprehension questions, append the teaching response so the child learns either way
+  var teaching = (dynQ && dynQ.teaching_response) ? dynQ.teaching_response : '';
+  var headerEmoji = isComprehension ? (pickedBest ? '\u2728' : '\uD83D\uDD4A\uFE0F') : '\uD83D\uDD4A\uFE0F';
+  var fullText = ack + (teaching ? (' ' + teaching) : '');
+
   // Show ack as a card below choices
   var existing=document.getElementById('choice-ack-card');
   if(existing)existing.remove();
   var card=document.createElement('div');
   card.id='choice-ack-card';
-  card.style.cssText='background:#F0F7F0;border-left:3px solid #4A7C59;border-radius:0 12px 12px 0;padding:14px 16px;margin-top:14px;animation:fadeUp .3s ease both;';
-  card.innerHTML='<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;font-style:italic;">\uD83D\uDD4A\uFE0F '+ack+'</p>';
+  var borderColor = isComprehension ? (pickedBest ? '#4A7C59' : '#C9A227') : '#4A7C59';
+  card.style.cssText='background:#F0F7F0;border-left:3px solid '+borderColor+';border-radius:0 12px 12px 0;padding:14px 16px;margin-top:14px;animation:fadeUp .3s ease both;';
+  card.innerHTML='<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;font-style:italic;">'+headerEmoji+' '+fullText+'</p>';
   var choicesEl=btn.closest('.q-choices');
   if(choicesEl&&choicesEl.parentNode)choicesEl.parentNode.insertBefore(card,choicesEl.nextSibling);
   if(TTS&&TTS.stop)TTS.stop();
-  setTimeout(function(){TTS.speakDirect(ack);},300);
+  setTimeout(function(){TTS.speakDirect(fullText);},300);
 }
 
 function toggleStep(el,ev){
@@ -1336,7 +1357,7 @@ function finishSession(){
   var encG=COMP_ENC[AGE]||COMP_ENC.rise;
   var enc=encG[tid]||encG.fear;
   var nt=nextTopic();
-  var titles={nest:'You did it! You SOARed! 🌟',rise:'You SOARed today! Well done.',soar:'You showed up. That matters.'};
+  var titles={nest:'You did it! You soared! 🌟',rise:'You soared today! Well done.',soar:'You showed up. That matters.'};
   var subs={nest:'God delights in you — Psalm 147:11.',rise:'All four steps. Well done.',soar:'Seek · Open · Act · Respond.'};
   var sm=str.count===1?'First day — great start!':str.count+' days in a row!';
 
@@ -1387,7 +1408,7 @@ function finishSession(){
     }
   },200);
   if(AGE==='nest'){
-    var cel='You did it! You SOARed — all the way through, Seek, Open, Act, and Respond. God is so pleased with you today. '+enc+' Come back tomorrow — there is another story waiting just for you!';
+    var cel='You did it! You soared — all the way through, Seek, Open, Act, and Respond. God is so pleased with you today. '+enc+' Come back tomorrow — there is another story waiting just for you!';
     setTimeout(function(){TTS.speakDirect(cel);},700);
   }
 }
@@ -1444,6 +1465,15 @@ var TTS=(function(){
   t=t.replace(/\b1\s+(Samuel|Kings|Chronicles|Corinthians|Thessalonians|Timothy|Peter|John)\b/g,'First $1');
   t=t.replace(/\b2\s+(Samuel|Kings|Chronicles|Corinthians|Thessalonians|Timothy|Peter|John)\b/g,'Second $1');
   t=t.replace(/\b3\s+(John)\b/g,'Third $1');
+  // Pronunciation fixes — some speech engines mangle these words.
+  // Replace with phonetic spellings that reliably read correctly.
+  // Order matters: longer/compound forms first.
+  t=t.replace(/\bSOARed\b/gi,'sord');
+  t=t.replace(/\bsoared\b/g,'sord');
+  t=t.replace(/\bSOAR\b/g,'Sore');
+  t=t.replace(/\bSoar\b/g,'Sore');
+  t=t.replace(/\bsoar\b/g,'sore');
+  t=t.replace(/\bSPARROW\b/g,'Sparrow');
   // Em dashes to natural pause
   t=t.replace(/\s*\u2014\s*/g,', ');
   // Strip emoji
@@ -2011,8 +2041,29 @@ function buildSystemPrompt(topicId, age, lang) {
     '- Content that is too complex for the age group',
     '- Content that minimizes the child\'s real emotional experience',
     '',
+    '══════════════════════════════════════════',
+    'RULE 5 — LEARNING FEEDBACK. EVERY ANSWER TEACHES.',
+    '══════════════════════════════════════════',
+    'There are two kinds of questions. Decide which kind this question is, and set question_type accordingly.',
+    '',
+    'REFLECTION QUESTIONS — use when asking how the child feels, what they would do, or anything with no single best biblical answer.',
+    'Example: "How does this make you feel?" or "What would you do?"',
+    'For these: every choice gets a warm, affirming choice_ack. Never say right or wrong. Validate the feeling, gently point to God. teaching_response should be an empty string.',
+    '',
+    'COMPREHENSION QUESTIONS — use when asking what the Bible teaches, what a character should have done, or what God wants in a situation. These have a best biblical answer.',
+    'Example: "What does God want us to do when someone hurts us?" with choices like Forgive them / Stay angry / Get back at them / Avoid them forever.',
+    'For these: mark exactly one choice as "best":true. The other choices are "best":false.',
+    '',
+    'For COMPREHENSION questions, the choice_ack text must follow these rules:',
+    '- If best:true — celebrate gently and explain WHY this reflects Scripture. Example: "That\u2019s right! God wants us to forgive because He forgave us first (Ephesians 4:32)."',
+    '- If best:false — NEVER say "wrong" or "incorrect" or "no." Affirm the child\u2019s thoughtfulness, then gently teach the biblical answer. Example: "That\u2019s a thoughtful answer. Let\u2019s see what God\u2019s Word says — He teaches us to forgive, even when it\u2019s hard, because He forgave us first."',
+    '- Every choice_ack for a comprehension question, whether best or not, must end by connecting back to the same Scripture truth so the child learns it either way.',
+    '- Never make a child feel they failed. The goal is always teaching, never grading.',
+    '',
+    'teaching_response: for comprehension questions, write one warm sentence stating the biblical answer plainly, to display after ANY choice is picked, reinforcing the lesson regardless of what the child chose.',
+    '',
     '════════════════════════════════',
-    'RULE 5 — OUTPUT FORMAT (STRICT).',
+    'RULE 6 — OUTPUT FORMAT (STRICT).',
     '════════════════════════════════',
     'Return ONLY valid JSON. No preamble. No explanation. No markdown fences.',
     'The JSON must have exactly this structure:',
@@ -2021,11 +2072,16 @@ function buildSystemPrompt(topicId, age, lang) {
     '  "verse": { "text": "exact verse text", "ref": "Book Chapter:Verse" },',
     '  "story": "the full story text using \\n\\n to separate paragraphs",',
     '  "ack": "the acknowledgement card text (1-2 sentences validating the emotion and introducing the Bible character)",',
+    '  "story_summary": "one plain sentence summarizing what happened in the Bible story, for quick review",',
+    '  "what_we_learn": "1-2 sentences stating what this story teaches us about God\u2019s character — His love, faithfulness, power, justice, mercy, etc.",',
+    '  "god_sighting": "one simple question inviting the child to notice God\u2019s goodness in their own life today, such as where did you see kindness today or who helped you today",',
     '  "question": {',
     '    "text": "the question text",',
-    '    "choices": [{"e":"emoji","l":"label"},{"e":"emoji","l":"label"},{"e":"emoji","l":"label"},{"e":"emoji","l":"label"}],',
-    '    "choice_ack": {"label 1": "warm affirming 1-2 sentence response for Nestlings who pick this choice — never say right or wrong, always affirm the feeling and gently point to God", "label 2": "...", "label 3": "...", "label 4": "..."},',
-    '    "prompt": "the journal writing prompt (for Rising and Soaring only — include even if empty string for Nestlings)"',
+    '    "question_type": "reflection or comprehension — see RULE 6 below to decide which one",',
+    '    "choices": [{"e":"emoji","l":"label","best":true_or_false}],',
+    '    "choice_ack": {"label 1": "response text", "label 2": "...", "label 3": "...", "label 4": "..."},',
+    '    "prompt": "the journal writing prompt (for Rising and Soaring only — include even if empty string for Nestlings)",',
+    '    "teaching_response": "for comprehension questions only: 1-2 sentences explaining what God\u2019s Word teaches about this, used regardless of which choice the child picks — include even if empty string for reflection questions"',
     '  }',
     '  "action": {',
     '    "title": "action title",',
@@ -2039,8 +2095,8 @@ function buildSystemPrompt(topicId, age, lang) {
     '  "bibleRef": "the primary Bible passage this session draws from (e.g. 1 Kings 19:1-18)"',
     '}',
     '',
-    'For Nestlings: choices array must have exactly 4 items. prompt may be empty string.',
-    'For Rising and Soaring: choices array must be empty []. prompt must be a real writing prompt.',
+    'For Nestlings: choices array must have exactly 4 items, each with a "best" boolean. prompt may be empty string.',
+    'For Rising and Soaring: choices array must be empty []. prompt must be a real writing prompt. teaching_response still applies if question_type is comprehension — show it after they submit their written answer.',
     '',
     '════════════════════════════════════════════',
     'FINAL INSTRUCTION: Generate one complete, fresh, Bible-grounded SPARROW Jr. session.',
@@ -2277,6 +2333,25 @@ function populateDynamic(session, topicId, age, lang) {
     + paras + scrBlock;
   document.getElementById('listen-s').innerHTML = mkListenBar('story', listenLbl, listenSub);
 
+  // Story Summary + What We Learn About God
+  var slEl = document.getElementById('story-summary-learn');
+  if (slEl) {
+    var slHtml = '';
+    if (session.story_summary) {
+      slHtml += '<div style="background:rgba(168,181,162,0.12);border-radius:12px;padding:12px 14px;margin-top:14px;">'
+        + '<div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#7A8070;margin-bottom:4px;font-weight:700;">'
+        + (lang==='es' ? 'En Pocas Palabras' : 'In a Few Words') + '</div>'
+        + '<p style="font-size:13px;color:#3A3A38;line-height:1.6;margin:0;">' + session.story_summary + '</p></div>';
+    }
+    if (session.what_we_learn) {
+      slHtml += '<div style="background:rgba(201,162,39,0.1);border-radius:12px;padding:12px 14px;margin-top:10px;">'
+        + '<div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#A8841C;margin-bottom:4px;font-weight:700;">'
+        + (lang==='es' ? 'Lo Que Aprendemos de Dios' : 'What We Learn About God') + '</div>'
+        + '<p style="font-size:13px;color:#3A3A38;line-height:1.6;margin:0;">' + session.what_we_learn + '</p></div>';
+    }
+    slEl.innerHTML = slHtml;
+  }
+
   // Parent note
   var pnEl = document.getElementById('story-pnote');
   if (age === 'nest' && session.pnote) {
@@ -2348,6 +2423,18 @@ function populateDynamic(session, topicId, age, lang) {
     el.addEventListener('click',  function(ev){ toggleStep(this, ev); });
     el.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); toggleStep(this,ev); } });
   });
+
+  // God Sighting — invites the child to notice God's goodness today
+  var gsEl = document.getElementById('god-sighting');
+  if (gsEl && session.god_sighting) {
+    gsEl.innerHTML = '<div style="background:rgba(74,124,89,0.1);border-radius:12px;padding:14px 16px;margin-top:16px;text-align:center;">'
+      + '<div style="font-size:22px;margin-bottom:6px;">\uD83D\uDC40\u2728</div>'
+      + '<div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#4A7C59;margin-bottom:4px;font-weight:700;">'
+      + (lang==='es' ? 'Mira a Dios Hoy' : 'God Sighting') + '</div>'
+      + '<p style="font-size:14px;color:#2D4A3E;line-height:1.6;margin:0;font-style:italic;">' + session.god_sighting + '</p></div>';
+  } else if (gsEl) {
+    gsEl.innerHTML = '';
+  }
 
   // ── R: Prayer ─────────────────────────────────────────────
   document.getElementById('pr-text').textContent = session.prayer;
@@ -2556,57 +2643,87 @@ function submitJournalResponse() {
   var topicName = TOPIC ? TOPIC.name : 'this topic';
   var age = AGE || 'rise';
 
-  // Show loading state — create the card if it doesn't exist yet
   var card = document.getElementById('soar-response-card');
-  console.log('[SPARROW Jr] response card found:', !!card);
   if (!card) {
-    // Card missing — create it right after the textarea's parent
     card = document.createElement('div');
     card.id = 'soar-response-card';
     ta.parentNode.appendChild(card);
-    console.log('[SPARROW Jr] response card created dynamically');
   }
   card.style.display = 'block';
   card.style.cssText = 'display:block;background:#F0F7F0;border-left:3px solid #4A7C59;border-radius:0 12px 12px 0;padding:14px 16px;margin-top:12px;animation:fadeUp .3s ease both;';
   card.innerHTML = '<p style="font-size:13px;color:#4A7C59;font-style:italic;">Soar is listening\u2026 \uD83D\uDD4A\uFE0F</p>';
 
+  var dynQ = (window._dynSession && window._dynSession.question) ? window._dynSession.question : null;
+  var isComprehension = dynQ && dynQ.question_type === 'comprehension';
+  var teaching = (dynQ && dynQ.teaching_response) ? dynQ.teaching_response : '';
+
   var ageDesc = age === 'nest' ? 'a 4-7 year old child' : age === 'rise' ? 'an 8-12 year old child' : 'a 13-17 year old teenager';
-  var prompt = 'A child is working through a Bible lesson about: ' + topicName + '.\n\n'
-    + 'They are ' + ageDesc + '. They just wrote this response to the reflection question:\n\n'
-    + '"' + response + '"\n\n'
-    + 'As Soar, a gentle faith companion, give a warm encouraging 2-3 sentence response. '
-    + 'Never say right or wrong. Affirm their honesty. Gently connect their feeling to God\u2019s love or the Bible story. '
-    + 'End with one sentence of hope or encouragement. '
-    + 'Speak directly to the child. Be warm, brief, and age-appropriate. Plain text only.';
+
+  var prompt;
+  if (isComprehension) {
+    prompt = 'A child is working through a Bible lesson about: ' + topicName + '.\n\n'
+      + 'They are ' + ageDesc + '. The question was: "' + (dynQ.text||'') + '"\n'
+      + 'The biblical teaching point is: "' + teaching + '"\n\n'
+      + 'They wrote this response:\n\n"' + response + '"\n\n'
+      + 'As Soar, a gentle faith companion: affirm their thoughtfulness, then warmly teach the biblical answer above in your own words. '
+      + 'NEVER say "wrong" or "incorrect" or "no." Make the child feel good about engaging, while still clearly teaching the true biblical answer. '
+      + 'Keep it to 2-3 sentences. Speak directly to the child. Plain text only.';
+  } else {
+    prompt = 'A child is working through a Bible lesson about: ' + topicName + '.\n\n'
+      + 'They are ' + ageDesc + '. They just wrote this response to the reflection question:\n\n'
+      + '"' + response + '"\n\n'
+      + 'As Soar, a gentle faith companion, give a warm encouraging 2-3 sentence response. '
+      + 'Never say right or wrong. Affirm their honesty. Gently connect their feeling to God\u2019s love or the Bible story. '
+      + 'End with one sentence of hope or encouragement. '
+      + 'Speak directly to the child. Be warm, brief, and age-appropriate. Plain text only.';
+  }
 
   var origin = window.location.origin;
   var url = (origin && origin !== 'null' && origin.startsWith('http'))
     ? origin + '/.netlify/functions/anthropic'
     : '/.netlify/functions/anthropic';
 
-  console.log('[SPARROW Jr] fetching:', url);
+  var SJR_FALLBACK = isComprehension && teaching
+    ? ('Thank you for thinking that through. ' + teaching)
+    : 'Thank you for sharing that with Soar. God sees your heart, and He is so glad you took time to think about this today. Keep going \u2014 the next step is waiting for you.';
+
+  var sjrDone = false;
+  var sjrShow = function(text){
+    if (sjrDone) return;
+    sjrDone = true;
+    card.innerHTML = '<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;"><strong style="color:#4A7C59;">\uD83D\uDD4A\uFE0F Soar:</strong> ' + text + '</p>';
+    if (TTS && TTS.speakDirect) setTimeout(function(){ TTS.speakDirect(text); }, 300);
+  };
+
+  var sjrTimeout = setTimeout(function(){
+    console.log('[SPARROW Jr] timeout reached — showing fallback');
+    sjrShow(SJR_FALLBACK);
+  }, 8000);
 
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'claude-sonnet-4-6',
-      max_tokens: 200,
+      max_tokens: 220,
       messages: [{ role: 'user', content: prompt }]
     })
   })
-  .then(function(r){ console.log('[SPARROW Jr] response status:', r.status); return r.json(); })
+  .then(function(r){
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
   .then(function(data){
-    console.log('[SPARROW Jr] response data:', data);
-    var text = data.content && data.content[0] && data.content[0].text
+    clearTimeout(sjrTimeout);
+    var text = (data && data.content && data.content[0] && data.content[0].text)
       ? data.content[0].text.trim()
-      : 'Thank you for sharing that. God sees your heart, and He is so glad you are here today.';
-    card.innerHTML = '<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;"><strong style="color:#4A7C59;">\uD83D\uDD4A\uFE0F Soar:</strong> ' + text + '</p>';
-    if (TTS && TTS.speakDirect) setTimeout(function(){ TTS.speakDirect(text); }, 300);
+      : SJR_FALLBACK;
+    sjrShow(text);
   })
   .catch(function(err){
     console.log('[SPARROW Jr] fetch error:', err);
-    card.innerHTML = '<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;"><strong style="color:#4A7C59;">\uD83D\uDD4A\uFE0F Soar:</strong> Thank you for sharing that. God sees your heart, and He is so glad you are here today. Keep going \u2014 the next step is waiting for you.</p>';
+    clearTimeout(sjrTimeout);
+    sjrShow(SJR_FALLBACK);
   });
 }
 
