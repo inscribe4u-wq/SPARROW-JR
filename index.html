@@ -2082,14 +2082,14 @@ function buildSystemPrompt(topicId, age, lang) {
     '  "verse": { "text": "exact verse text", "ref": "Book Chapter:Verse" },',
     '  "story": "the full story text using \\n\\n to separate paragraphs",',
     '  "ack": "the acknowledgement card text (1-2 sentences validating the emotion and introducing the Bible character)",',
-    '  "story_summary": "one plain sentence summarizing what happened in the Bible story, for quick review",',
-    '  "what_we_learn": "1-2 sentences stating what this story teaches us about God\u2019s character — His love, faithfulness, power, justice, mercy, etc.",',
-    '  "god_sighting": "one simple question inviting the child to notice God\u2019s goodness in their own life today, such as where did you see kindness today or who helped you today",',
+    '  "story_summary": "ONE short plain sentence summarizing the Bible story",',
+    '  "what_we_learn": "ONE sentence stating what this story teaches us about God\u2019s character",',
+    '  "god_sighting": "ONE short simple question inviting the child to notice God\u2019s goodness today",',
     '  "question": {',
     '    "text": "the question text",',
     '    "question_type": "reflection or comprehension — see RULE 6 below to decide which one",',
     '    "choices": [{"e":"emoji","l":"label","best":true_or_false}],',
-    '    "choice_ack": {"label 1": "response text", "label 2": "...", "label 3": "...", "label 4": "..."},',
+    '    "choice_ack": {"label 1": "response text, ONE short sentence only", "label 2": "...", "label 3": "...", "label 4": "..."},',
     '    "prompt": "the journal writing prompt (for Rising and Soaring only — include even if empty string for Nestlings)",',
     '    "teaching_response": "for comprehension questions only: 1-2 sentences explaining what God\u2019s Word teaches about this, used regardless of which choice the child picks — include even if empty string for reflection questions"',
     '  }',
@@ -2167,7 +2167,7 @@ function fetchDynamicSession(topicId, age, lang, onSuccess, onError) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 2500,
+      max_tokens: 1800,
       system: systemPrompt,
       messages: [{ role: 'user', content: userMessage }]
     })
