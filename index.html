@@ -2089,7 +2089,7 @@ function buildSystemPrompt(topicId, age, lang) {
     '',
     '{',
     '  "verse": { "text": "exact verse text \u2014 ONE TO TWO VERSES MAXIMUM, never a full chapter or long passage range. Choose the single most relevant verse, not the broadest one.", "ref": "Book Chapter:Verse" },',
-    '  "story": "the full story text using \\n\\n to separate paragraphs",',
+    '  "story": "the full story text using \\n\\n to separate paragraphs. CRITICAL: must stay within the storyLength word limit given above for this age group \u2014 this has been violated in real sessions, producing stories that ran to a full chapter retelling spanning multiple phone screens. Count your words before finishing. If you are at risk of exceeding the limit, cut detail, not the ending.",',
     '  "ack": "the acknowledgement card text (1-2 sentences validating the emotion and introducing the Bible character)",',
     '  "story_summary": "ONE short plain sentence summarizing the Bible story",',
     '  "what_we_learn": "ONE sentence stating what this story teaches us about God\u2019s character",',
@@ -2314,9 +2314,54 @@ function populateDynamic(session, topicId, age, lang) {
 
   // ── S: Story ──────────────────────────────────────────────
   var tc = ak === 'young' ? 'st-young' : ak === 'mid' ? 'st-mid' : 'st-teen';
-  var paras = session.story.split('\n\n').map(function(p){
-    return '<p class="' + tc + '" style="margin-bottom:14px">' + p + '</p>';
-  }).join('');
+  // Defensive backstop: the AI is instructed to keep story length within
+  // per-age word limits (120 / 220 / 320 words), but this has been observed
+  // to occasionally run well past that, e.g. a full multi-paragraph telling
+  // of 1 Samuel 24 for a Soaring session. This is the AI's own paraphrase,
+  // not a direct Scripture quote, so unlike the verse field it is
+  // appropriate to gracefully shorten it here, always at a sentence
+  // boundary, never mid-sentence or mid-word.
+  var _storyWordLimit = (age === 'nest') ? 150 : (age === 'rise') ? 260 : 380;
+  var _rawStory = session.story || '';
+  var _storyWords = _rawStory.split(/\s+/);
+  if (_storyWords.length > _storyWordLimit) {
+    console.log('[SPARROW Jr] Story exceeded word limit for age ' + age + ':', _storyWords.length, 'words, trimming to', _storyWordLimit);
+    var _truncated = _storyWords.slice(0, _storyWordLimit).join(' ');
+    var _lastSentenceEnd = Math.max(_truncated.lastIndexOf('.'), _truncated.lastIndexOf('!'), _truncated.lastIndexOf('?'));
+    if (_lastSentenceEnd > _truncated.length * 0.5) {
+      _rawStory = _truncated.slice(0, _lastSentenceEnd + 1);
+    } else {
+      _rawStory = _truncated + '\u2026';
+    }
+  }
+
+  // Even a correctly-capped story (up to 320-380 words for older kids) can
+  // feel like a lot of scrolling on a small phone screen. Stories above a
+  // visual-overwhelm threshold collapse behind a tap, the same proven
+  // pattern as the long-scripture-passage collapse above — first
+  // paragraph shown by default, full story one tap away.
+  var _storyParaArr = _rawStory.split('\n\n');
+  var _storyOverwhelmThreshold = (age === 'nest') ? 70 : (age === 'rise') ? 130 : 170;
+  var _storyIsLong = _storyWords.length > _storyOverwhelmThreshold && _storyParaArr.length > 1;
+
+  var paras;
+  if (!_storyIsLong) {
+    paras = _storyParaArr.map(function(p){
+      return '<p class="' + tc + '" style="margin-bottom:14px">' + p + '</p>';
+    }).join('');
+  } else {
+    var _storyPreviewId = 'story-preview-' + Date.now();
+    var _storyFullId = 'story-full-' + Date.now();
+    var _firstPara = _storyParaArr[0];
+    var _restParas = _storyParaArr.slice(1).map(function(p){
+      return '<p class="' + tc + '" style="margin-bottom:14px">' + p + '</p>';
+    }).join('');
+    var _expandLabel = (lang === 'es') ? 'Leer la Historia Completa \u2192' : 'Read the Full Story \u2192';
+    var _collapseLabel = (lang === 'es') ? 'Mostrar Menos \u2191' : 'Show Less \u2191';
+    paras = '<p class="' + tc + '" id="' + _storyPreviewId + '" style="margin-bottom:14px">' + _firstPara + '</p>'
+      + '<div id="' + _storyFullId + '" style="display:none;">' + _restParas + '</div>'
+      + '<button onclick="(function(){var f=document.getElementById(\'' + _storyFullId + '\');var b=event.target;if(f.style.display===\'none\'){f.style.display=\'block\';b.textContent=\'' + _collapseLabel + '\';}else{f.style.display=\'none\';b.textContent=\'' + _expandLabel + '\';}})()" style="background:none;border:none;color:var(--forest);font-size:14px;font-weight:700;text-decoration:underline;cursor:pointer;padding:4px 0;margin-bottom:14px;">' + _expandLabel + '</button>';
+  }
   // Some topics naturally pull a single short verse; others (like parables —
   // Luke 10:25-37, the Good Samaritan) pull a longer narrative passage that
   // is appropriately long AS SCRIPTURE but heavy to show open by default on
