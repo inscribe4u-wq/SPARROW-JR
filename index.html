@@ -2673,6 +2673,15 @@ selectTopic = function(id) {
       console.log('[SPARROW] fallback for:', id, err);
       hideLoadingOverlay();
 
+      // Update the header to the topic actually tapped — without this,
+      // the "Fear" placeholder hardcoded in the static HTML stays on
+      // screen permanently for any topic whose AI call fails, since no
+      // success path ran to overwrite it with the real topic name.
+      var _emojiEl = document.getElementById('topic-emoji');
+      var _nameEl  = document.getElementById('topic-name');
+      if (_emojiEl && TOPIC) _emojiEl.textContent = TOPIC.emoji;
+      if (_nameEl  && TOPIC) _nameEl.textContent  = TOPIC.name;
+
       // Only emotion topics actually have saved local content to fall back
       // to. Showing "using saved content" for Journey/Virtues topics, which
       // have no local fallback at all, was misleading — there was nothing
