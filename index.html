@@ -562,15 +562,15 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         <div class="prayer-card">
           <div class="pr-stars" id="prStars" aria-hidden="true"></div>
           <span class="pr-dove" aria-hidden="true">🕊️</span>
-          <span class="pr-lead">A prayer for you today</span>
+          <span class="pr-lead" id="pr-lead-label">A prayer for you today</span>
           <p class="pr-text" id="pr-text">Loading…</p>
         </div>
         <div id="prayer-own-area"></div>
         <div id="teen-bridge"></div>
       </div>
       <div class="nav-row" id="finish-row">
-        <button class="btn-s" onclick="nextStep('a')">← Back</button>
-        <button class="btn-g" onclick="finishSession()">Finish ✦</button>
+        <button class="btn-s" id="nav-back-a" onclick="nextStep('a')">← Back</button>
+        <button class="btn-g" id="nav-finish" onclick="finishSession()">Finish ✦</button>
       </div>
     </div>
   </div>
@@ -1451,7 +1451,15 @@ function finishSession(){
     }
   },200);
   if(AGE==='nest'){
-    var cel='You did it! You soared — all the way through, Seek, Open, Act, and Respond. God is so pleased with you today. '+enc+' Come back tomorrow — there is another story waiting just for you!';
+    // This spoken celebration text was hardcoded English with no language
+    // check, even though it concatenates `enc` (the encouragement text)
+    // into the middle of itself — enc is correctly Spanish when Spanish
+    // is selected, which meant the spoken result was a real mix of both
+    // languages in one continuous sentence, exactly as reported.
+    var isEsCel = (LANG === 'es');
+    var cel = isEsCel
+      ? '\u00a1Lo lograste! Volaste — por todo el camino, Busca, Abre, Actúa y Responde. Dios está muy contento contigo hoy. ' + enc + ' Regresa mañana — hay otra historia esperándote.'
+      : 'You did it! You soared — all the way through, Seek, Open, Act, and Respond. God is so pleased with you today. ' + enc + ' Come back tomorrow — there is another story waiting just for you!';
     setTimeout(function(){TTS.speakDirect(cel);},700);
   }
 }
@@ -2167,7 +2175,7 @@ function buildSystemPrompt(topicId, age, lang) {
     '    "steps": ["step 1","step 2","step 3","step 4"]',
     '  },',
     '  "prayer": "the full prayer text",',
-    '  "pnote": "parent note text (Nestlings only — include even if empty string for other ages)",',
+    '  "pnote": "guidance text for the grown-up reading with a Nestling-aged child (Nestlings only — include even if empty string for other ages). MUST be written in the same ' + langName + ' as every other field in this JSON — this field has specifically failed and been returned in English before even when every other field was correctly translated. There is no exception for this field.",',
     '  "enc": "encouragement text for completion screen (1-2 sentences)",',
     '  "comp_verse": { "text": "a different verse from the anchor verse above", "ref": "Book Chapter:Verse" },',
     '  "bibleRef": "the primary Bible passage this session draws from (e.g. 1 Kings 19:1-18)"',
@@ -2521,13 +2529,34 @@ function populateDynamic(session, topicId, age, lang) {
     slEl.innerHTML = slHtml;
   }
 
-  // Parent note
+  // Parent note — this field has been a known weak spot for the AI
+  // occasionally returning English even when every other field in the
+  // same session correctly came back in Spanish. A reliable client-side
+  // language detector isn't realistic to build well, so instead this
+  // flags the lesson for review automatically if Spanish was requested,
+  // giving the ministry team direct visibility into the exact thing
+  // that was hard to verify any other way.
   var pnEl = document.getElementById('story-pnote');
   if (age === 'nest' && session.pnote) {
     var pnLbl = ui ? ui.for_grownup : 'For the grown-up reading with you';
     pnEl.innerHTML = '<div class="parent-note"><span class="pn-icon">👨‍👧</span><div>'
       + '<div class="pn-label">' + pnLbl + '</div>'
       + '<div class="pn-text">' + session.pnote + '</div></div></div>';
+
+    if (lang === 'es') {
+      // Simple heuristic only — looks for common English function words
+      // that essentially never appear in Spanish parent-note content.
+      // This is a soft signal for the ministry team to check, not a
+      // hard block, since it can occasionally false-flag short text.
+      var _enWords = /\b(the|and|your|child|this|with|that|when|feels?|because)\b/i;
+      if (_enWords.test(session.pnote)) {
+        console.log('[SPARROW Jr] pnote may have returned in English despite Spanish being selected:', session.pnote);
+        var flagNote = document.createElement('div');
+        flagNote.style.cssText = 'font-size:11px;color:#A8841C;margin-top:6px;font-style:italic;';
+        flagNote.textContent = '\u26A0\uFE0F Esta nota puede haber regresado en ingl\u00e9s por error.';
+        pnEl.querySelector('.parent-note').appendChild(flagNote);
+      }
+    }
   } else pnEl.innerHTML = '';
 
   // ── O: Question ───────────────────────────────────────────
@@ -3076,6 +3105,9 @@ function applyNavLanguage() {
   _set('nav-next-a', ui ? ui.next_action : null, 'Next: Action \u2192');
   _set('nav-back-o', ui ? ui.back : null, '\u2190 Back');
   _set('nav-next-r', ui ? ui.next_prayer : null, 'Next: Prayer \u2192');
+  _set('pr-lead-label', ui ? ui.prayer_lead : null, 'A prayer for you today');
+  _set('nav-back-a', ui ? ui.back : null, '\u2190 Back');
+  _set('nav-finish', ui ? ui.finish : null, 'Finish \u2726');
 }
 </script>
 </body>
