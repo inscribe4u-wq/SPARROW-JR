@@ -1732,18 +1732,7 @@ populate=function(){
   ['s','o','a','r'].forEach(function(k){var we=document.getElementById('lbl-'+k+'-w');var de=document.getElementById('lbl-'+k+'-d');if(we)we.textContent=lg[k];if(de)de.textContent=DSCS_ES[k];});
 };
 
-var _pc0=pickChoice;
-pickChoice=function(btn,ev){
-  if(ev){var r=btn.getBoundingClientRect();var rp=document.createElement('div');rp.className='q-ripple';rp.style.left=(ev.clientX-r.left)+'px';rp.style.top=(ev.clientY-r.top)+'px';btn.appendChild(rp);setTimeout(function(){rp.remove();},700);burst(ev.clientX,ev.clientY,10);}
-  btn.closest('.q-choices').querySelectorAll('.q-choice').forEach(function(b){b.classList.remove('sel');b.setAttribute('aria-pressed','false');});
-  btn.classList.add('sel');btn.setAttribute('aria-pressed','true');
-  if(AGE!=='nest'||!TOPIC)return;
-  var lb=btn.querySelector('.c-label');if(!lb)return;
-  var lbl=lb.textContent.trim();
-  if(LANG==='es'){var ea=ES.data[TOPIC.id]&&ES.data[TOPIC.id].choice_ack&&ES.data[TOPIC.id].choice_ack[lbl];if(ea){if(TTS&&TTS.stop)TTS.stop();setTimeout(function(){TTS.speakDirect(ea);},300);}return;}
-  var ta=CHOICE_ACK[TOPIC.id];if(!ta)return;var ack2=ta[lbl];if(!ack2)return;
-  if(TTS&&TTS.stop)TTS.stop();setTimeout(function(){TTS.speakDirect(ack2);},300);
-};
+// (legacy Spanish pickChoice override removed — current pickChoice already handles Spanish via window._dynChoiceAck and CHOICE_ACK, and displays a visible card with full teaching feedback)
 
 
 /* ════ SPARROW Jr. Dynamic Content Engine ════
