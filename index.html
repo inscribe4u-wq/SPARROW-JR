@@ -2058,6 +2058,8 @@ function buildSystemPrompt(topicId, age, lang) {
     '══════════════════════════════════════',
     'Never quote a full chapter or a long passage range like John 1:1-17. Choose ONE, or at most TWO consecutive, verses that capture the heart of the lesson. A child who struggles with reading should never see a wall of scripture text. Trust one well-chosen verse to carry the weight — that is more faithful to how this should feel for a young reader than quoting broadly.',
     '',
+    'CRITICAL: The verse field must contain ONE passage from ONE place in Scripture only. NEVER combine multiple separate references together, such as "Genesis 12:1-4, Ruth 1:16-17, Deuteronomy 31:8" — even if each individual reference is short on its own, stacking references from different books asks a child to hold three different stories in mind at once, which defeats the entire purpose of keeping the passage focused. If a topic seems to call for more than one supporting passage, choose the single strongest one for the verse field, and you may mention the others only briefly, in your own words, within the story or what_we_learn text — never as a second or third quoted citation.',
+    '',
     '══════════════════════════════════════',
     'RULE 5 — LEARNING FEEDBACK. EVERY ANSWER TEACHES.',
     '══════════════════════════════════════════',
@@ -2323,6 +2325,20 @@ function populateDynamic(session, topicId, age, lang) {
   // same Go-Deeper pattern used elsewhere, so the full passage is always
   // available but never forced onto the screen as a wall of text.
   var _verseText = session.verse.text || '';
+  var _verseRef  = session.verse.ref || '';
+
+  // Defensive backstop: if the AI stacks multiple separate references
+  // together (e.g. "Genesis 12:1-4, Ruth 1:16-17, Deuteronomy 31:8"),
+  // detected by a comma followed by another book-style citation, only
+  // show the first reference. The prompt now instructs against this,
+  // but the screen itself should never display a stacked citation
+  // regardless of how reliably the instruction is followed.
+  if (/,\s*[1-3]?\s*[A-Z][a-z]+.*\d+:\d+/.test(_verseRef)) {
+    console.log('[SPARROW Jr] Stacked reference detected, trimming to first:', _verseRef);
+    _verseRef = _verseRef.split(',')[0].trim();
+  }
+  session.verse.ref = _verseRef;
+
   var _verseWords = _verseText.split(/\s+/);
   var _isLongPassage = _verseWords.length > 45;
 
@@ -2346,11 +2362,17 @@ function populateDynamic(session, topicId, age, lang) {
       + '</div>';
   }
 
-  // Bible ref badge — shows which passage the AI drew from
-  var refBadge = session.bibleRef
+  // Bible ref badge — shows which passage the AI drew from.
+  // Apply the same stacked-reference trim used for the verse field above,
+  // so this badge and the scripture card never disagree with each other.
+  var _bibleRefClean = session.bibleRef || '';
+  if (/,\s*[1-3]?\s*[A-Z][a-z]+.*\d+:\d+/.test(_bibleRefClean)) {
+    _bibleRefClean = _bibleRefClean.split(',')[0].trim();
+  }
+  var refBadge = _bibleRefClean
     ? '<div style="display:inline-block;background:rgba(58,125,68,0.1);border:1px solid rgba(58,125,68,0.25);border-radius:99px;padding:4px 12px;font-size:11px;color:var(--forest);letter-spacing:0.08em;margin-bottom:14px;">'
       + (lang === 'es' ? 'Pasaje de hoy: ' : 'Today\'s passage: ')
-      + session.bibleRef
+      + _bibleRefClean
       + '</div>'
     : '';
 
