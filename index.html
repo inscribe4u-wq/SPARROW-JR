@@ -427,7 +427,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
       </button>
     </div>
   </div>
-  <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;" id="lang-row"><button onclick="setLang('en')" id="lang-en" class="lang-btn active">English</button><button onclick="setLang('es')" id="lang-es" class="lang-btn">Español</button></div><p class="welcome-brand">by Inscribe4u · No accounts · No data collected from minors</p><p style="text-align:center;margin-top:10px;"><a href="#" onclick="exportFlags();return false;" style="color:#D6D3CD;font-size:10px;text-decoration:none;">Ministry</a></p>
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;" id="lang-row"><button onclick="setLang('en')" id="lang-en" class="lang-btn active">English</button><button onclick="setLang('es')" id="lang-es" class="lang-btn">Español</button></div><p class="welcome-brand" id="footer-brand">by Inscribe4u · No accounts · No data collected from minors</p><p style="text-align:center;margin-top:10px;"><a href="#" onclick="exportFlags();return false;" style="color:#D6D3CD;font-size:10px;text-decoration:none;" id="footer-ministry">Ministry</a></p>
 </section>
 
 <!-- ══════════════════════════════════════════
@@ -435,7 +435,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
 ══════════════════════════════════════════ -->
 <section id="screen-library" class="screen" role="main" aria-label="Where would you like to start?">
   <div class="topics-hdr">
-    <button class="topics-back" onclick="goTo('screen-welcome')" aria-label="Back to home">← Back</button>
+    <button class="topics-back" id="nav-back-home" onclick="goTo('screen-welcome')" aria-label="Back to home">← Back</button>
     <div class="topics-hdr-inner">
       <div class="topics-badge" id="library-badge">Ages 4–7 · Little Wings</div>
       <h2 class="topics-title" id="library-title">Where would you like to start?</h2>
@@ -489,7 +489,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
   <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:25%;"></div></div>
   <div class="daily-hdr">
     <div class="daily-nav">
-      <button class="daily-back" onclick="goTo('screen-topics')" aria-label="Back to topics">← Topics</button>
+      <button class="daily-back" id="nav-back-topics" onclick="goTo('screen-topics')" aria-label="Back to topics">← Topics</button>
       <div class="topic-badge"><span id="topic-emoji">😟</span><span id="topic-name">Fear</span></div>
     </div>
     <div class="soar-tabs" role="tablist" aria-label="SPARROW Jr. steps">
@@ -512,7 +512,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         <div id="story-summary-learn"></div>
         <div id="story-pnote"></div>
       </div>
-      <div class="nav-row"><button class="btn-p" onclick="nextStep('o')">Next: Open Your Heart →</button></div>
+      <div class="nav-row"><button class="btn-p" id="nav-next-o" onclick="nextStep('o')">Next: Open Your Heart →</button></div>
     </div>
     <!-- O -->
     <div class="soar-step" id="step-o" role="tabpanel" aria-labelledby="tab-o">
@@ -526,8 +526,8 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         <div id="q-response"></div>
       </div>
       <div class="nav-row">
-        <button class="btn-s" onclick="nextStep('s')">← Back</button>
-        <button class="btn-p" onclick="nextStep('a')">Next: Action →</button>
+        <button class="btn-s" id="nav-back-s" onclick="nextStep('s')">← Back</button>
+        <button class="btn-p" id="nav-next-a" onclick="nextStep('a')">Next: Action →</button>
       </div>
     </div>
     <!-- A -->
@@ -539,7 +539,7 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         </div>
         <div id="listen-a"></div>
         <div class="action-card">
-          <div class="ac-label">Today's Challenge</div>
+          <div class="ac-label" id="ac-label-txt">Today's Challenge</div>
           <div class="ac-title" id="ac-title">Loading…</div>
           <div class="ac-detail" id="ac-detail"></div>
         </div>
@@ -547,8 +547,8 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         <div id="god-sighting"></div>
       </div>
       <div class="nav-row">
-        <button class="btn-s" onclick="nextStep('o')">← Back</button>
-        <button class="btn-p" onclick="nextStep('r')">Next: Prayer →</button>
+        <button class="btn-s" id="nav-back-o" onclick="nextStep('o')">← Back</button>
+        <button class="btn-p" id="nav-next-r" onclick="nextStep('r')">Next: Prayer →</button>
       </div>
     </div>
     <!-- R -->
@@ -562,15 +562,15 @@ body.nest-mode .btn-p{animation:nestGlow 2.5s ease-in-out infinite;}
         <div class="prayer-card">
           <div class="pr-stars" id="prStars" aria-hidden="true"></div>
           <span class="pr-dove" aria-hidden="true">🕊️</span>
-          <span class="pr-lead">A prayer for you today</span>
+          <span class="pr-lead" id="pr-lead-label">A prayer for you today</span>
           <p class="pr-text" id="pr-text">Loading…</p>
         </div>
         <div id="prayer-own-area"></div>
         <div id="teen-bridge"></div>
       </div>
       <div class="nav-row" id="finish-row">
-        <button class="btn-s" onclick="nextStep('a')">← Back</button>
-        <button class="btn-g" onclick="finishSession()">Finish ✦</button>
+        <button class="btn-s" id="nav-back-a" onclick="nextStep('a')">← Back</button>
+        <button class="btn-g" id="nav-finish" onclick="finishSession()">Finish ✦</button>
       </div>
     </div>
   </div>
@@ -908,6 +908,8 @@ var COMP_VERSES = {
   mean:    {text:'Do not be overcome by evil, but overcome evil with good.',ref:'Romans 12:21'},
   sick:    {text:'The Lord is close to the brokenhearted and saves those who are crushed in spirit.',ref:'Psalm 34:18'}
 };
+var COMP_VERSES_ES={fear:{text:'Sé fuerte y valiente.',ref:'Josué 1:9'},lonely:{text:'El Señor mismo va delante de ti.',ref:'Deuteronomio 31:8'},leftout:{text:'Te llamé por tu nombre.',ref:'Isaías 43:1'},mistakes:{text:'Si confesamos, él es fiel para perdonarnos.',ref:'Primera Juan 1:9'},cantdoit:{text:'Todo lo puedo en Cristo.',ref:'Filipenses 4:13'},anxiety:{text:'No se angustien; preséntenselo a Dios.',ref:'Filipenses 4:6'},grief:{text:'El Señor está cerca de los que tienen el corazón quebrantado.',ref:'Salmo 34:18'},doubt:{text:'¡Creo; ayúdame en mi poca fe!',ref:'Marcos 9:24'},mean:{text:'Vence el mal con el bien.',ref:'Romanos 12:21'},sick:{text:'El Señor está cerca de los que tienen el corazón quebrantado.',ref:'Salmo 34:18'}};
+
 var COMP_ENC = {
   nest:{
     fear:'You were brave today! God found Elijah when he was hiding. God always knows right where you are.',
@@ -946,6 +948,8 @@ var COMP_ENC = {
     sick:'You brought something heavy to God today. That matters more than you know. Keep bringing it.'
   }
 };
+var COMP_ENC_ES={nest:{fear:'Dios sabe dónde estás.',lonely:'Dios estuvo con José.',leftout:'Dios te llamó por nombre.',mistakes:'Soltaste el error.',cantdoit:'Dios estuvo con Gedeón.',anxiety:'Dios cuida de ti.',grief:'Jesús lloró. Nunca estás solo.',doubt:'Preguntar es valiente.',mean:'Elegir la bondad es difícil.',sick:'Dios escucha.'},rise:{fear:'Dios no dejó a Elías solo.',lonely:'Dios estuvo con José todo el tiempo.',leftout:'David llamó a Mefibosét por nombre.',mistakes:'Jesús restauró a Pedro.',cantdoit:'Dios sería la fortaleza.',anxiety:'La paz de Pablo está disponible ahora.',grief:'Jesús se encontró con el duelo.',doubt:'Tomás necesitaba ver y Jesús vino.',mean:'David eligió la misericordia.',sick:'Llevar a alguien ante Dios es fe.'},soar:{fear:'La voz suave sigue hablando.',lonely:'Dios dice: nunca te dejaré.',leftout:'Dios te llamó antes de que existieras.',mistakes:'No hay condenación en Cristo.',cantdoit:'El poder en ti resucitó a Jesús.',anxiety:'La paz de Dios sobrepasa el entendimiento.',grief:'El duelo que no se resuelve es válido.',doubt:'Tomás dudó y luego declaró: ¡Mi Señor!',mean:'Una respuesta suave aparta la ira.',sick:'Dios no siempre sana. Pero su presencia permanece.'}};
+
 
 /* ── CHOICE ACKNOWLEDGEMENTS ────────────────────────────────── */
 var CHOICE_ACK = {
@@ -1166,7 +1170,7 @@ function populate(){
   } else {
     rEl.innerHTML='<div class="journal-area">'
       +'<p class="journal-prompt">'+(q.prompt||'Write your thoughts here…')+'</p>'
-      +'<textarea class="journal-ta" placeholder="Write here…" aria-label="Your response" rows="4" data-jkey="\'+jk+\'"></textarea>'
+      +'<textarea class="journal-ta" placeholder="Write here…" aria-label="' + (LANG==='es'?'Tu respuesta':'Your response') + '" rows="4" data-jkey="\'+jk+\'"></textarea>'
       +(AGE==='soar'?'<p id="crisis-note">If you are carrying something heavy that feels too big to hold alone, please talk to a trusted adult or your youth minister.</p>':'')
       +'</div>';
     setTimeout(function(){
@@ -1211,8 +1215,28 @@ function populate(){
   else tb.innerHTML='';
 
   // Labels
-  var LBLS={nest:{s:'Story Time',o:'One Question',a:'Action Step',r:'A Prayer'},rise:{s:'Story Time',o:'One Question',a:'Action Step',r:'A Prayer'},soar:{s:"Seek God's Truth",o:'Open Your Heart',a:'Act in Faith',r:'Respond Through Prayer'}};
-  var DSCS={s:"Seek God's Truth",o:'Open Your Heart',a:'Act in Faith',r:'Respond Through Prayer'};
+  var LBLS=(function(){
+  var _ie=(LANG==='es'&&typeof ES!=='undefined'&&ES.ui);
+  var _u=_ie?ES.ui:null;
+  var _ag=AGE||'rise';
+  var sw=_ie?(_u['step_s_'+_ag]||_u.step_s_rise||'Historia'):'Story Time';
+  var ow=_ie?(_u['step_o_'+_ag]||_u.step_o_rise||'Una Pregunta'):'One Question';
+  var aw=_ie?(_u['step_a_'+_ag]||_u.step_a_rise||'Acción'):'Action Step';
+  var rw=_ie?(_u.step_r_rise||'Una Oración'):'A Prayer';
+  return {nest:{s:sw,o:ow,a:aw,r:rw},rise:{s:sw,o:ow,a:aw,r:rw},
+    soar:{s:_ie?(_u.desc_s||'Busca la Verdad de Dios'):"Seek God's Truth",
+          o:_ie?(_u.desc_o||'Abre Tu Corazón'):'Open Your Heart',
+          a:_ie?(_u.desc_a||'Actúa en Fe'):'Act in Faith',
+          r:_ie?(_u.desc_r||'Responde en Oración'):'Respond Through Prayer'}};
+})()
+  var DSCS=(function(){
+  var _ie=(LANG==='es'&&typeof ES!=='undefined'&&ES.ui);
+  var _u=_ie?ES.ui:null;
+  return {s:_ie?(_u&&_u.desc_s||'Busca la Verdad de Dios'):"Seek God's Truth",
+          o:_ie?(_u&&_u.desc_o||'Abre Tu Corazón'):'Open Your Heart',
+          a:_ie?(_u&&_u.desc_a||'Actúa en Fe'):'Act in Faith',
+          r:_ie?(_u&&_u.desc_r||'Responde en Oración'):'Respond Through Prayer'};
+})()
   var lg=LBLS[AGE]||LBLS.rise;
   ['s','o','a','r'].forEach(function(k){
     var we=document.getElementById('lbl-'+k+'-w');var de=document.getElementById('lbl-'+k+'-d');
@@ -1299,7 +1323,7 @@ function pickChoice(btn,ev){
     var ta=(TOPIC && CHOICE_ACK[TOPIC.id]) ? CHOICE_ACK[TOPIC.id] : null;
     if(ta&&ta[label]){ack=ta[label];}
     else if(window._dynChoiceAck&&window._dynChoiceAck[label]){ack=window._dynChoiceAck[label];}
-    else{ack='Thank you for sharing that. God sees exactly how you feel, and He loves you so much.';}
+    else{ack=(LANG==='es')?'Gracias por compartir eso. Dios ve exactamente cómo te sientes y te ama mucho.':'Thank you for sharing that. God sees exactly how you feel, and He loves you so much.';}
 
     console.log('[SPARROW Jr] resolved ack:', ack);
 
@@ -1374,19 +1398,44 @@ function nextTopic(){
 function finishSession(){
   if(TTS&&TTS.stop)TTS.stop();
   var str=getStreak(),tid=TOPIC?TOPIC.id:'fear';
-  var cv=COMP_VERSES[tid]||COMP_VERSES.fear;
-  var encG=COMP_ENC[AGE]||COMP_ENC.rise;
-  var enc=encG[tid]||encG.fear;
+  var isEsF=(LANG==='es');
+  var _cvSrc=(isEsF&&typeof COMP_VERSES_ES!=='undefined')?COMP_VERSES_ES:COMP_VERSES;
+  var _encSrc=(isEsF&&typeof COMP_ENC_ES!=='undefined')?COMP_ENC_ES:COMP_ENC;
+  var cv=_cvSrc[tid]||_cvSrc.fear||COMP_VERSES.fear;
+  var encG=_encSrc[AGE]||_encSrc.rise||COMP_ENC.rise;
+  var enc=encG[tid]||encG.fear||'';
   var nt=nextTopic();
-  var titles={nest:'You did it! You soared! 🌟',rise:'You soared today! Well done.',soar:'You showed up. That matters.'};
-  var subs={nest:'God delights in you — Psalm 147:11.',rise:'All four steps. Well done.',soar:'Seek · Open · Act · Respond.'};
-  var sm=str.count===1?'First day — great start!':str.count+' days in a row!';
+
+  // The entire completion screen had no Spanish support at all — every
+  // string was hardcoded English regardless of language, even though
+  // real translations (comp_nest, comp_rise, word_for_you, choose_topic,
+  // home, etc.) already existed unused in ES.ui from earlier in the build.
+  var isEs = (LANG === 'es' && typeof ES !== 'undefined' && ES.ui);
+  var ui = isEs ? ES.ui : null;
+
+  var titles = isEs
+    ? {nest: ui.comp_nest, rise: ui.comp_rise, soar: ui.comp_soar}
+    : {nest:'You did it! You soared! 🌟',rise:'You soared today! Well done.',soar:'You showed up. That matters.'};
+  var subs = isEs
+    ? {nest: ui.comp_sub_nest, rise: ui.comp_sub_rise, soar: ui.comp_sub_soar}
+    : {nest:'God delights in you — Psalm 147:11.',rise:'All four steps. Well done.',soar:'Seek · Open · Act · Respond.'};
+  var sm = isEs
+    ? (str.count===1 ? (ui.streak_first || 'Primer día — ¡gran comienzo!') : str.count + (ui.streak_days || ' días seguidos.'))
+    : (str.count===1?'First day — great start!':str.count+' days in a row!');
+  var wordForYouLbl = isEs ? (ui.word_for_you || 'Una palabra para ti') : 'A word for you';
+  var tryNextLbl = isEs ? 'Intenta después' : 'Try next';
+  var comeBackTitle = isEs ? (ui.come_back || 'Regresa mañana — sigue creciendo') : 'Come back tomorrow — keep growing';
+  var comeBackSub = isEs ? (ui.come_back_sub || 'Cada día que abres SPARROW Jr. es otro momento para encontrarte con Dios. Él estará aquí. ¿Misma hora mañana?') : 'Every day you open SPARROW Jr. is another moment to meet God. He will be here. Same time tomorrow?';
+  var readyDeeperLbl = isEs ? (ui.ready_deeper || '¿Listo para ir más profundo?') : 'Ready to go deeper?';
+  var bridgeDescTxt = isEs ? (ui.bridge_desc || 'SPARROW Jr. está diseñado para crecer contigo hacia SPARROW.') : 'SPARROW is the next step — the adult faith companion built on the same Biblical Alignment System. Ask a parent or your youth minister when you are ready.';
+  var chooseTopicLbl = isEs ? (ui.choose_topic || 'Elige un tema') : 'Choose a topic';
+  var homeLbl = isEs ? (ui.home || 'Inicio') : 'Home';
 
   var nextSec=nt?'<div class="comp-next" data-tid="'+nt.id+'"  role="button" tabindex="0" aria-label="Try '+nt.name+'">'
     +'<span class="nx-emoji">'+nt.emoji+'</span>'
-    +'<div><div class="nx-lbl">Try next</div><div class="nx-name">'+nt.name+'</div></div>'
+    +'<div><div class="nx-lbl">'+tryNextLbl+'</div><div class="nx-name">'+nt.name+'</div></div>'
     +'<span class="nx-arr">›</span></div>':'';
-  var bridgeSec=AGE==='soar'?'<div class="teen-bridge" style="width:calc(100% - 36px);margin:12px auto 0;box-sizing:border-box"><span class="tb-icon">🦅</span><div><div class="tb-label">Ready to go deeper?</div><div class="tb-desc">SPARROW is the next step — the adult faith companion built on the same Biblical Alignment System. Ask a parent or your youth minister when you are ready.</div></div></div>':'';
+  var bridgeSec=AGE==='soar'?'<div class="teen-bridge" style="width:calc(100% - 36px);margin:12px auto 0;box-sizing:border-box"><span class="tb-icon">🦅</span><div><div class="tb-label">'+readyDeeperLbl+'</div><div class="tb-desc">'+bridgeDescTxt+'</div></div></div>':'';
 
   document.getElementById('comp-body').innerHTML=
     '<div class="comp-banner">'
@@ -1398,13 +1447,13 @@ function finishSession(){
     +'<p class="comp-ref">'+cv.ref+'</p>'
     +'</div>'
     +'<div class="comp-streak"><span class="streak-flame">🔥</span><div><div class="streak-n">'+str.count+'</div><div class="streak-lbl">'+sm+'</div><div class="streak-dots">'+dotHtml(Math.min(str.count,7))+'</div></div></div>'
-    +'<div class="comp-enc"><div class="enc-lbl">A word for you</div><div class="enc-txt">'+enc+'</div></div>'
-    +'<div class="comp-return"><span class="ret-sparrow">🦅</span><div><div class="ret-title">Come back tomorrow — keep growing</div><div class="ret-sub">Every day you open SPARROW Jr. is another moment to meet God. He will be here. Same time tomorrow?</div></div></div>'
+    +'<div class="comp-enc"><div class="enc-lbl">'+wordForYouLbl+'</div><div class="enc-txt">'+enc+'</div></div>'
+    +'<div class="comp-return"><span class="ret-sparrow">🦅</span><div><div class="ret-title">'+comeBackTitle+'</div><div class="ret-sub">'+comeBackSub+'</div></div></div>'
     +nextSec+bridgeSec;
 
   var fr=document.getElementById('comp-btns');fr.innerHTML='';
-  var b1=document.createElement('button');b1.className='btn-g';b1.style.flex='1';b1.textContent='Choose a topic';b1.onclick=function(){goTo('screen-topics');};
-  var b2=document.createElement('button');b2.className='btn-s';b2.style.padding='16px 14px';b2.textContent='Home';b2.onclick=function(){goTo('screen-welcome');};
+  var b1=document.createElement('button');b1.className='btn-g';b1.style.flex='1';b1.textContent=chooseTopicLbl;b1.onclick=function(){goTo('screen-topics');};
+  var b2=document.createElement('button');b2.className='btn-s';b2.style.padding='16px 14px';b2.textContent=homeLbl;b2.onclick=function(){goTo('screen-welcome');};
   fr.appendChild(b1);fr.appendChild(b2);
 
   goTo('screen-complete');
@@ -1429,7 +1478,15 @@ function finishSession(){
     }
   },200);
   if(AGE==='nest'){
-    var cel='You did it! You soared — all the way through, Seek, Open, Act, and Respond. God is so pleased with you today. '+enc+' Come back tomorrow — there is another story waiting just for you!';
+    // This spoken celebration text was hardcoded English with no language
+    // check, even though it concatenates `enc` (the encouragement text)
+    // into the middle of itself — enc is correctly Spanish when Spanish
+    // is selected, which meant the spoken result was a real mix of both
+    // languages in one continuous sentence, exactly as reported.
+    var isEsCel = (LANG === 'es');
+    var cel = isEsCel
+      ? '\u00a1Lo lograste! Volaste — por todo el camino, Busca, Abre, Actúa y Responde. Dios está muy contento contigo hoy. ' + enc + ' Regresa mañana — hay otra historia esperándote.'
+      : 'You did it! You soared — all the way through, Seek, Open, Act, and Respond. God is so pleased with you today. ' + enc + ' Come back tomorrow — there is another story waiting just for you!';
     setTimeout(function(){TTS.speakDirect(cel);},700);
   }
 }
@@ -1528,21 +1585,14 @@ function ttsToggle(btn){TTS.toggle(btn.getAttribute('data-key'),btn);}
 function spdSet(s,btn){TTS.setSpeed(s);if(TTS&&TTS.stop)TTS.stop();btn.parentNode.querySelectorAll('.spd-btn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');}
 
 function mkListenBar(k,lbl,sub){
-  if(!TTS.hasTTS)return'<div class="tts-na">Listen not available in this browser</div>';
+  var isEs=(typeof LANG!=='undefined'&&LANG==='es');
+  if(!TTS.hasTTS)return'<div class="tts-na">'+(isEs?'Audio no disponible en este navegador':'Listen not available in this browser')+'</div>';
   var isN=(AGE==='nest');
-  var ll=isN?'Tap to Listen!':lbl,ls=isN?'I will read the story to you':sub,nm=isN?' nest-mode':'';
-  return'<div class="listen-bar'+nm+'" role="region" aria-label="Listen option">'
-    +'<button class="listen-btn" aria-label="Listen" data-key="'+k+'" onclick="ttsToggle(this)" title="Tap to hear aloud">🔊</button>'
-    +'<div class="listen-info"><div class="listen-label">'+ll+'</div><div class="listen-sub">'+ls+'</div></div>'
-    +'<div class="spd-row">'
-    +(isN
-      ?'<button class="spd-btn" onclick="spdSet(0.55,this)" aria-label="Slow">🐢</button>'
-       +'<button class="spd-btn on" onclick="spdSet(0.7,this)" aria-label="Normal">▶</button>'
-       +'<button class="spd-btn" onclick="spdSet(0.88,this)" aria-label="Faster">🐇</button>'
-      :'<button class="spd-btn" onclick="spdSet(0.6,this)">Slow</button>'
-       +'<button class="spd-btn on" onclick="spdSet(0.78,this)">Normal</button>'
-       +'<button class="spd-btn" onclick="spdSet(0.96,this)">Faster</button>'
-    )+'</div></div>';
+  var ll=isN?(isEs?'¡Toca para escuchar!':'Tap to Listen!'):lbl;
+  var ls=isN?(isEs?'Te leeré la historia en voz alta':'I will read the story to you'):sub;
+  var nm=isN?' nest-mode':'';
+  var slowLbl=isEs?'Lento':'Slow',normalLbl='Normal',fasterLbl=isEs?'Rápido':'Faster';
+  return'<div class="listen-bar'+nm+'" role="region" aria-label="Listen option">'+'<button class="listen-btn" aria-label="Listen" data-key="'+k+'" onclick="ttsToggle(this)" title="Tap to hear aloud">🔊</button>'+'<div class="listen-info"><div class="listen-label">'+ll+'</div><div class="listen-sub">'+ls+'</div></div>'+'<div class="spd-row">'+(isN?'<button class="spd-btn" onclick="spdSet(0.55,this)" aria-label="Slow">🐢</button>'+'<button class="spd-btn on" onclick="spdSet(0.7,this)" aria-label="Normal">▶</button>'+'<button class="spd-btn" onclick="spdSet(0.88,this)" aria-label="Faster">🐇</button>':'<button class="spd-btn" onclick="spdSet(0.6,this)">'+slowLbl+'</button>'+'<button class="spd-btn on" onclick="spdSet(0.78,this)">'+normalLbl+'</button>'+'<button class="spd-btn" onclick="spdSet(0.96,this)">'+fasterLbl+'</button>')+'</div></div>';
 }
 
 /* ── WELCOME ANIMATION ──────────────────────────────────────── */
@@ -1587,6 +1637,7 @@ function setLang(lang) {
   if(sb)sb.classList.toggle('active',lang==='es');
   if(lang==='en'){
     // .welcome-sub now holds the "Meet God in the Moment" tagline, set once in HTML — no longer overwritten with the SOAR acronym, which collided with it after the tagline was added.
+    var _ws=document.querySelector('.welcome-sub');if(_ws)_ws.textContent='Meet God in the Moment';
     var tag=document.querySelector('.welcome-tag');if(tag)tag.textContent='A children’s faith companion that grows with you.';
     var lbl=document.querySelector('.age-label');if(lbl)lbl.textContent='Who is reading today?';
     [['card-nest','Ages 4–7','Nestlings','Safe in the nest · With a grown-up'],
@@ -1610,6 +1661,7 @@ function setLang(lang) {
       var d=card.querySelector('.card-desc');if(d)d.textContent=c[3];});
   }
   buildGrid();
+  applyNavLanguage();
 }
 
 var _bg0=buildGrid;
@@ -2120,6 +2172,7 @@ function buildSystemPrompt(topicId, age, lang) {
     'RULE 6 — OUTPUT FORMAT (STRICT).',
     '════════════════════════════════',
     'Return ONLY valid JSON. No preamble. No explanation. No markdown fences.',
+    'CRITICAL LANGUAGE REMINDER: every single text value in this JSON — the verse text, the story, the question, the choices, the action steps, the prayer, every field without exception — must be written in ' + langName + '. This has been a real, repeated failure point. Do not default to English. Check each field before finishing.',
     'The JSON must have exactly this structure:',
     '',
     '{',
@@ -2143,7 +2196,7 @@ function buildSystemPrompt(topicId, age, lang) {
     '    "steps": ["step 1","step 2","step 3","step 4"]',
     '  },',
     '  "prayer": "the full prayer text",',
-    '  "pnote": "parent note text (Nestlings only — include even if empty string for other ages)",',
+    '  "pnote": "guidance text for the grown-up reading with a Nestling-aged child (Nestlings only — include even if empty string for other ages). MUST be written in the same ' + langName + ' as every other field in this JSON — this field has specifically failed and been returned in English before even when every other field was correctly translated. There is no exception for this field.",',
     '  "enc": "encouragement text for completion screen (1-2 sentences)",',
     '  "comp_verse": { "text": "a different verse from the anchor verse above", "ref": "Book Chapter:Verse" },',
     '  "bibleRef": "the primary Bible passage this session draws from (e.g. 1 Kings 19:1-18)"',
@@ -2437,7 +2490,7 @@ function populateDynamic(session, topicId, age, lang) {
     scrBlock = '<div class="scripture-block">'
       + '<p class="scripture-text" id="' + _versePreviewId + '">"' + _preview + '" <span style="opacity:.6">\u2026</span></p>'
       + '<p class="scripture-text" id="' + _verseFullId + '" style="display:none;">"' + _verseText + '"</p>'
-      + '<button onclick="(function(){var p=document.getElementById(\'' + _versePreviewId + '\');var f=document.getElementById(\'' + _verseFullId + '\');var b=event.target;if(f.style.display===\'none\'){f.style.display=\'block\';p.style.display=\'none\';b.textContent=\'Show Less \u2191\';}else{f.style.display=\'none\';p.style.display=\'block\';b.textContent=\'Read the Full Passage \u2192\';}})()" style="background:none;border:none;color:var(--forest);font-size:13px;font-weight:700;text-decoration:underline;cursor:pointer;padding:4px 0;margin-bottom:8px;">Read the Full Passage \u2192</button>'
+      + '<button onclick="(function(){var p=document.getElementById(\'' + _versePreviewId + '\');var f=document.getElementById(\'' + _verseFullId + '\');var b=event.target;if(f.style.display===\'none\'){f.style.display=\'block\';p.style.display=\'none\';b.textContent=(typeof LANG!==\'undefined\'&&LANG===\'es\')?\'Mostrar menos \u2191\':\'Show Less \u2191\';}else{f.style.display=\'none\';p.style.display=\'block\';b.textContent=(typeof LANG!==\'undefined\'&&LANG===\'es\')?\'Leer el pasaje completo \u2192\':\'Read the Full Passage \u2192\';}})()" style="background:none;border:none;color:var(--forest);font-size:13px;font-weight:700;text-decoration:underline;cursor:pointer;padding:4px 0;margin-bottom:8px;">' + (lang==='es' ? 'Leer el Pasaje Completo →' : 'Read the Full Passage →') + '</button>'
       + '<p class="scripture-ref">' + session.verse.ref + '</p>'
       + '</div>';
   }
@@ -2497,13 +2550,34 @@ function populateDynamic(session, topicId, age, lang) {
     slEl.innerHTML = slHtml;
   }
 
-  // Parent note
+  // Parent note — this field has been a known weak spot for the AI
+  // occasionally returning English even when every other field in the
+  // same session correctly came back in Spanish. A reliable client-side
+  // language detector isn't realistic to build well, so instead this
+  // flags the lesson for review automatically if Spanish was requested,
+  // giving the ministry team direct visibility into the exact thing
+  // that was hard to verify any other way.
   var pnEl = document.getElementById('story-pnote');
   if (age === 'nest' && session.pnote) {
     var pnLbl = ui ? ui.for_grownup : 'For the grown-up reading with you';
     pnEl.innerHTML = '<div class="parent-note"><span class="pn-icon">👨‍👧</span><div>'
       + '<div class="pn-label">' + pnLbl + '</div>'
       + '<div class="pn-text">' + session.pnote + '</div></div></div>';
+
+    if (lang === 'es') {
+      // Simple heuristic only — looks for common English function words
+      // that essentially never appear in Spanish parent-note content.
+      // This is a soft signal for the ministry team to check, not a
+      // hard block, since it can occasionally false-flag short text.
+      var _enWords = /\b(the|and|your|child|this|with|that|when|feels?|because)\b/i;
+      if (_enWords.test(session.pnote)) {
+        console.log('[SPARROW Jr] pnote may have returned in English despite Spanish being selected:', session.pnote);
+        var flagNote = document.createElement('div');
+        flagNote.style.cssText = 'font-size:11px;color:#A8841C;margin-top:6px;font-style:italic;';
+        flagNote.textContent = '\u26A0\uFE0F Esta nota puede haber regresado en ingl\u00e9s por error.';
+        pnEl.querySelector('.parent-note').appendChild(flagNote);
+      }
+    }
   } else pnEl.innerHTML = '';
 
   // ── O: Question ───────────────────────────────────────────
@@ -2528,7 +2602,7 @@ function populateDynamic(session, topicId, age, lang) {
     // Store choice acks in temp so pickChoice can use them
     window._dynChoiceAck = q.choice_ack || {};
     // Fill any missing keys with a gentle default
-    q.choices.forEach(function(c){ if(!window._dynChoiceAck[c.l]) window._dynChoiceAck[c.l] = 'Thank you for sharing that. God sees exactly how you feel, and He cares so much about you.'; });
+    q.choices.forEach(function(c){ if(!window._dynChoiceAck[c.l]) window._dynChoiceAck[c.l] = (LANG==='es')? 'Gracias por compartir eso. Dios ve exactamente cómo te sientes, y se preocupa mucho por ti.' : 'Thank you for sharing that. God sees exactly how you feel, and He cares so much about you.'; });
   } else if (age === 'rise' || age === 'soar') {
     // Rising (8-12) and Soaring (13-17): collapsed by default, expands into
     // the full writing experience on tap — mirrors the Go Deeper pattern
@@ -2536,21 +2610,22 @@ function populateDynamic(session, topicId, age, lang) {
     // single button to step forward does.
     var writePh = ui ? ui.write_ph : 'Write here\u2026';
     var crisis  = (age === 'soar')
-      ? (ui ? ui.crisis : 'If you are carrying something heavy that feels too big to hold alone, please talk to a trusted adult or your youth minister.') + ' You can also call or text 988 anytime \u2014 it\u2019s free, confidential, and there is always someone ready to listen.'
+      ? (ui ? ui.crisis : 'If you are carrying something heavy that feels too big to hold alone, please talk to a trusted adult or your youth minister.') + (lang==='es' ? ' También puedes llamar o enviar un mensaje al 988 en cualquier momento — es gratis, confidencial y siempre hay alguien listo para escucharte.' : ' You can also call or text 988 anytime — it’s free, confidential, and there is always someone ready to listen.')
       : '';
 
     var qPrefKey = 'sparrow_jr_q_expand_pref_' + age;
     var qPref = ''; try { qPref = localStorage.getItem(qPrefKey) || ''; } catch(e) {}
     var startExpanded = (qPref === 'yes');
 
+    var _sBtnLbl=(lang==='es')?'Compartir con SOAR \\uD83D\\uDD4A\\uFE0F':'Share with Soar \\uD83D\\uDD4A\\uFE0F';
     rEl.innerHTML = '<button id="soar-q-toggle" onclick="toggleSoarQuestion()" style="width:100%;background:' + (startExpanded ? 'rgba(74,124,89,0.08)' : '#4A7C59') + ';color:' + (startExpanded ? '#4A7C59' : '#fff') + ';border:1.5px solid #4A7C59;border-radius:30px;padding:13px 22px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:14px;transition:background .2s,color .2s;">'
-      + (startExpanded ? 'Hide Reflection \u2191' : 'Reflect on This \u2192')
+      + (startExpanded ? (lang==='es' ? 'Ocultar Reflexión ↑' : 'Hide Reflection ↑') : (lang==='es' ? 'Reflexionar sobre Esto →' : 'Reflect on This →'))
       + '</button>'
       + '<div id="soar-q-content" style="display:' + (startExpanded ? 'block' : 'none') + ';">'
       + '<div class="journal-area">'
       + '<p class="journal-prompt">' + (q.prompt || writePh) + '</p>'
-      + '<textarea class="journal-ta" placeholder="' + writePh + '" aria-label="Your response" rows="4" data-jkey="' + jk + '"></textarea>'
-      + '<button onclick="submitJournalResponse()" style="width:100%;margin-top:10px;background:#4A7C59;color:#fff;border:none;border-radius:30px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;">Share with Soar \uD83D\uDD4A\uFE0F</button>'
+      + '<textarea class="journal-ta" placeholder="' + writePh + '" aria-label="' + (lang==='es'?'Tu respuesta':'Your response') + '" rows="4" data-jkey="' + jk + '"></textarea>'
+      + '<button onclick="submitJournalResponse()" style="width:100%;margin-top:10px;background:#4A7C59;color:#fff;border:none;border-radius:30px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;">'+_sBtnLbl+'</button>'
       + '<div id="soar-response-card" style="display:none;"></div>'
       + (crisis ? '<p id="crisis-note">' + crisis + '</p>' : '')
       + '</div>'
@@ -2662,7 +2737,8 @@ function populateDynamic(session, topicId, age, lang) {
   if (rEl2 && !document.getElementById('flag-review-btn')) {
     var flagWrap = document.createElement('div');
     flagWrap.style.cssText = 'text-align:center;margin-top:18px;padding-top:14px;border-top:1px solid rgba(0,0,0,0.06);';
-    flagWrap.innerHTML = '<button id="flag-review-btn" onclick="flagForReview()" style="background:none;border:none;color:#A8A29E;font-size:11px;text-decoration:underline;cursor:pointer;padding:6px;">Flag this lesson for ministry review</button>';
+    var _flagLbl=(LANG==='es')?'Marcar esta lección para revisión':'Flag this lesson for ministry review';
+    flagWrap.innerHTML = '<button id="flag-review-btn" onclick="flagForReview()" style="background:none;border:none;color:#A8A29E;font-size:11px;text-decoration:underline;cursor:pointer;padding:6px;">'+ _flagLbl +'</button>';
     rEl2.appendChild(flagWrap);
   }
 }
@@ -2688,6 +2764,7 @@ selectTopic = function(id) {
   STEP = 's';
   resetSteps();
   goTo('screen-daily');
+  applyNavLanguage();
   ann('You chose: ' + TOPIC.name + '. Getting your session ready.');
 
   // Clear any leftover retry block from a previous failed attempt on this
@@ -2750,11 +2827,12 @@ selectTopic = function(id) {
         if (daily) {
           var retryDiv = document.createElement('div');
           retryDiv.style.cssText = 'padding:32px 20px;text-align:center;max-width:380px;margin:0 auto;';
+          var _isEsR=(LANG==='es');
           retryDiv.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">\uD83D\uDCD6</div>'
-            + '<p style="font-family:var(--font-d);font-size:18px;color:var(--forest);margin-bottom:8px;">Connecting to God\'s Word\u2026</p>'
-            + '<p style="font-size:14px;color:var(--sage);line-height:1.7;margin-bottom:20px;">We need an internet connection to bring you a fresh Bible lesson for this topic. Please check your connection and try again.</p>'
-            + '<button onclick="selectTopic(\'' + id + '\')" style="background:var(--forest);color:#fff;border:none;border-radius:30px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;width:100%;">Try Again</button>'
-            + '<button onclick="goTo(\'screen-topics\')" style="background:transparent;color:var(--sage);border:1.5px solid var(--sage);border-radius:30px;padding:12px 28px;font-size:14px;cursor:pointer;width:100%;">Choose Another Topic</button>';
+            + '<p style="font-family:var(--font-d);font-size:18px;color:var(--forest);margin-bottom:8px;">' + (_isEsR?'Conectando a la Palabra de Dios\u2026':'Connecting to God\'s Word\u2026') + '</p>'
+            + '<p style="font-size:14px;color:var(--sage);line-height:1.7;margin-bottom:20px;">' + (_isEsR?'Necesitamos conexi\u00f3n a internet. Por favor verifica tu conexi\u00f3n e int\u00e9ntalo de nuevo.':'We need an internet connection to bring you a fresh Bible lesson for this topic. Please check your connection and try again.') + '</p>'
+            + '<button onclick="selectTopic(\'' + id + '\')" style="background:var(--forest);color:#fff;border:none;border-radius:30px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;width:100%;">' + (_isEsR?'Intentar de nuevo':'Try Again') + '</button>'
+            + '<button onclick="goTo(\'screen-topics\')" style="background:transparent;color:var(--sage);border:1.5px solid var(--sage);border-radius:30px;padding:12px 28px;font-size:14px;cursor:pointer;width:100%;">' + (_isEsR?'Elegir otro tema':'Choose Another Topic') + '</button>';
           daily.appendChild(retryDiv);
         }
       }
@@ -2835,109 +2913,53 @@ console.log('SPARROW Jr. Dynamic Content Engine loaded. Bible-only. Age-guarded.
 })();
 
 function submitJournalResponse() {
-  console.log('[SPARROW Jr] submitJournalResponse called');
   try {
   var ta = document.querySelector('#step-o .journal-ta');
-  console.log('[SPARROW Jr] textarea found:', !!ta, 'value:', ta ? ta.value : 'N/A');
-  if (!ta) {
-    alert('DEBUG: Could not find the textarea (#step-o .journal-ta). Please screenshot this and tell Claude.');
-    return;
-  }
+  if (!ta) { alert('DEBUG: textarea not found.'); return; }
   if (!ta.value.trim()) {
-    alert('Please write something before tapping Share with Soar.');
+    alert(LANG === 'es' ? 'Escribe algo antes de tocar Compartir con Soar.' : 'Please write something before tapping Share with Soar.');
     return;
   }
   var response = ta.value.trim();
-  var topicName = TOPIC ? TOPIC.name : 'this topic';
+  var topicName = TOPIC ? TOPIC.name : (LANG === 'es' ? 'este tema' : 'this topic');
   var age = AGE || 'rise';
-
+  var isEs = (LANG === 'es');
   var card = document.getElementById('soar-response-card');
-  if (!card) {
-    card = document.createElement('div');
-    card.id = 'soar-response-card';
-    ta.parentNode.appendChild(card);
-  }
+  if (!card) { card = document.createElement('div'); card.id = 'soar-response-card'; ta.parentNode.appendChild(card); }
   card.style.display = 'block';
   card.style.cssText = 'display:block;background:#F0F7F0;border-left:3px solid #4A7C59;border-radius:0 12px 12px 0;padding:14px 16px;margin-top:12px;animation:fadeUp .3s ease both;';
-  card.innerHTML = '<p style="font-size:13px;color:#4A7C59;font-style:italic;">Soar is listening\u2026 \uD83D\uDD4A\uFE0F</p>';
-
+  card.innerHTML = '<p style="font-size:13px;color:#4A7C59;font-style:italic;">' + (isEs ? 'Soar te escucha\u2026 \uD83D\uDD4A\uFE0F' : 'Soar is listening\u2026 \uD83D\uDD4A\uFE0F') + '</p>';
   var dynQ = (window._dynSession && window._dynSession.question) ? window._dynSession.question : null;
   var isComprehension = dynQ && dynQ.question_type === 'comprehension';
   var teaching = (dynQ && dynQ.teaching_response) ? dynQ.teaching_response : '';
-
-  var ageDesc = age === 'nest' ? 'a 4-7 year old child' : age === 'rise' ? 'an 8-12 year old child' : 'a 13-17 year old teenager';
-
-  var prompt;
-  if (isComprehension) {
-    prompt = 'A child is working through a Bible lesson about: ' + topicName + '.\n\n'
-      + 'They are ' + ageDesc + '. The question was: "' + (dynQ.text||'') + '"\n'
-      + 'The biblical teaching point is: "' + teaching + '"\n\n'
-      + 'They wrote this response:\n\n"' + response + '"\n\n'
-      + 'As Soar, a gentle faith companion: affirm their thoughtfulness, then warmly teach the biblical answer above in your own words. '
-      + 'NEVER say "wrong" or "incorrect" or "no." Make the child feel good about engaging, while still clearly teaching the true biblical answer. '
-      + 'Keep it to 2-3 sentences. Speak directly to the child. Plain text only.';
+  var langInstr = isEs ? 'CRITICAL: Tu respuesta completa DEBE estar en espa\u00f1ol. No uses ingl\u00e9s en absoluto.' : 'Speak directly to the child. Be warm, brief, and age-appropriate. Plain text only.';
+  var ageDesc = isEs ? (age === 'nest' ? 'un ni\u00f1o de 4 a 7 a\u00f1os' : age === 'rise' ? 'un ni\u00f1o de 8 a 12 a\u00f1os' : 'un adolescente de 13 a 17 a\u00f1os') : (age === 'nest' ? 'a 4-7 year old child' : age === 'rise' ? 'an 8-12 year old child' : 'a 13-17 year old teenager');
+  var prompt = (isEs ? 'Un ni\u00f1o trabaja en una lecci\u00f3n b\u00edblica sobre: ' : 'A child is working through a Bible lesson about: ') + topicName + '.\n\n' + (isEs ? 'Tiene la edad de ' : 'They are ') + ageDesc + '. ' + (isEs ? 'Escribi\u00f3: "' : 'They wrote: "') + response + '"\n\n';
+  if (isComprehension && teaching) {
+    prompt += (isEs ? 'El punto b\u00edblico es: "' : 'The biblical teaching point is: "') + teaching + '"\n\n';
+    prompt += isEs ? 'Como Soar, afirma su participaci\u00f3n y ense\u00f1a la verdad b\u00edblica con amor. Nunca digas incorrecto. 2-3 oraciones. ' : 'As Soar, affirm their engagement and warmly teach the biblical truth. NEVER say wrong. 2-3 sentences. ';
   } else {
-    prompt = 'A child is working through a Bible lesson about: ' + topicName + '.\n\n'
-      + 'They are ' + ageDesc + '. They just wrote this response to the reflection question:\n\n'
-      + '"' + response + '"\n\n'
-      + 'As Soar, a gentle faith companion, give a warm encouraging 2-3 sentence response. '
-      + 'Never say right or wrong. Affirm their honesty. Gently connect their feeling to God\u2019s love or the Bible story. '
-      + 'End with one sentence of hope or encouragement. '
-      + 'Speak directly to the child. Be warm, brief, and age-appropriate. Plain text only.';
+    prompt += isEs ? 'Como Soar, da una respuesta c\u00e1lida de 2-3 oraciones. Afirma su honestidad. Conecta su sentimiento con el amor de Dios. Termina con esperanza. ' : "As Soar, give a warm 2-3 sentence response. Affirm honesty. Connect feeling to God's love. End with hope. ";
   }
-
+  prompt += langInstr;
   var origin = window.location.origin;
-  var url = (origin && origin !== 'null' && origin.startsWith('http'))
-    ? origin + '/.netlify/functions/anthropic'
-    : '/.netlify/functions/anthropic';
-
-  var SJR_FALLBACK = isComprehension && teaching
-    ? ('Thank you for thinking that through. ' + teaching)
-    : 'Thank you for sharing that with Soar. God sees your heart, and He is so glad you took time to think about this today. Keep going \u2014 the next step is waiting for you.';
-
+  var url = (origin && origin !== 'null' && origin.startsWith('http')) ? origin + '/.netlify/functions/anthropic' : '/.netlify/functions/anthropic';
+  var SJR_FALLBACK = isEs ? 'Gracias por compartir eso con Soar. Dios ve tu coraz\u00f3n, y est\u00e1 muy contento de que hayas tomado tiempo hoy. Sigue adelante.' : 'Thank you for sharing that. God sees your heart, and He is so glad you took time today. Keep going.';
   var sjrDone = false;
   var sjrShow = function(text){
-    if (sjrDone) return;
-    sjrDone = true;
+    if (sjrDone) return; sjrDone = true;
     card.innerHTML = '<p style="font-size:14px;color:#2D4A3E;line-height:1.75;margin:0;"><strong style="color:#4A7C59;">\uD83D\uDD4A\uFE0F Soar:</strong> ' + text + '</p>';
     if (TTS && TTS.speakDirect) setTimeout(function(){ TTS.speakDirect(text); }, 300);
   };
-
-  var sjrTimeout = setTimeout(function(){
-    console.log('[SPARROW Jr] timeout reached — showing fallback');
-    sjrShow(SJR_FALLBACK);
-  }, 8000);
-
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 220,
-      messages: [{ role: 'user', content: prompt }]
-    })
-  })
-  .then(function(r){
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  })
-  .then(function(data){
-    clearTimeout(sjrTimeout);
-    var text = (data && data.content && data.content[0] && data.content[0].text)
-      ? data.content[0].text.trim()
-      : SJR_FALLBACK;
-    sjrShow(text);
-  })
-  .catch(function(err){
-    console.log('[SPARROW Jr] fetch error:', err);
-    clearTimeout(sjrTimeout);
-    sjrShow(SJR_FALLBACK);
-  });
-  } catch(outerErr) {
-    console.log('[SPARROW Jr] OUTER ERROR:', outerErr);
-    alert('DEBUG: submitJournalResponse crashed: ' + outerErr.message + ' Please screenshot this and tell Claude.');
-  }
+  var sjrTimeout = setTimeout(function(){ sjrShow(SJR_FALLBACK); }, 8000);
+  fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 220, messages: [{ role: 'user', content: prompt }] }) })
+  .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  .then(function(data){ clearTimeout(sjrTimeout); sjrShow((data && data.content && data.content[0] && data.content[0].text) ? data.content[0].text.trim() : SJR_FALLBACK); })
+  .catch(function(){ clearTimeout(sjrTimeout); sjrShow(SJR_FALLBACK); });
+  } catch(e) { alert('DEBUG: ' + e.message); }
 }
+
+
 
 /* ── FLAG FOR REVIEW ───────────────────────────────────────────
    Lets the ministry team flag an AI-generated lesson for manual
@@ -3022,13 +3044,65 @@ function toggleSoarQuestion() {
   content.style.display = nowOpen ? 'block' : 'none';
   btn.style.background = nowOpen ? 'rgba(74,124,89,0.08)' : '#4A7C59';
   btn.style.color = nowOpen ? '#4A7C59' : '#fff';
-  btn.textContent = nowOpen ? 'Hide Reflection \u2191' : 'Reflect on This \u2192';
+  var isEsT=(typeof LANG!=='undefined'&&LANG==='es');
+  btn.textContent=nowOpen?(isEsT?'Ocultar Reflexión ↑':'Hide Reflection ↑'):(isEsT?'Reflexionar sobre Esto →':'Reflect on This →');
 
   // Preference is tracked per age group so a Rising child's choice doesn't
   // affect a Soaring teen's default, and vice versa
   var prefKey = 'sparrow_jr_q_expand_pref_' + (AGE || 'rise');
   try { localStorage.setItem(prefKey, nowOpen ? 'yes' : 'no'); } catch(e) {}
 }
+
+function applyNavLanguage() {
+  // Updates the navigation chrome — Back/Next buttons — that appear on
+  // every lesson screen. These had real Spanish translations sitting
+  // unused in ES.ui (next_open, next_action, next_prayer, back, back_topics)
+  // but were never wired to anything, so they stayed in English regardless
+  // of the selected language. This is the single place that applies them.
+  var isEs = (LANG === 'es' && typeof ES !== 'undefined' && ES.ui);
+  var ui = isEs ? ES.ui : null;
+
+  var _set = function(id, esText, enText) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = isEs ? esText : enText;
+  };
+
+  _set('nav-back-home',  ui ? ui.back : null, '\u2190 Back');
+  _set('nav-back-topics', ui ? (ui.back_topics || '\u2190 Temas') : null, '\u2190 Topics');
+  _set('nav-next-o', ui ? ui.next_open : null, 'Next: Open Your Heart \u2192');
+  _set('nav-back-s', ui ? ui.back : null, '\u2190 Back');
+  _set('nav-next-a', ui ? ui.next_action : null, 'Next: Action \u2192');
+  _set('nav-back-o', ui ? ui.back : null, '\u2190 Back');
+  _set('nav-next-r', ui ? ui.next_prayer : null, 'Next: Prayer \u2192');
+  _set('pr-lead-label', ui ? ui.prayer_lead : null, 'A prayer for you today');
+  _set('nav-back-a', ui ? ui.back : null, '\u2190 Back');
+  _set('nav-finish', ui ? ui.finish : null, 'Finish \u2726');
+  // SOAR step title + desc labels and footer-ministry
+  var fMin=document.getElementById('footer-ministry');
+  if(fMin)fMin.textContent=isEs?'Ministerio':'Ministry';
+  var _ag=AGE||'rise';
+  var _sw={s:isEs?(ui&&(ui['step_s_'+_ag]||ui.step_s_rise)||'Historia'):'Story Time',
+           o:isEs?(ui&&(ui['step_o_'+_ag]||ui.step_o_rise)||'Una Pregunta'):'One Question',
+           a:isEs?(ui&&(ui['step_a_'+_ag]||ui.step_a_rise)||'Acción'):'Action Step',
+           r:isEs?(ui&&ui.step_r_rise||'Una Oración'):'A Prayer'};
+  var _sd={s:isEs?(ui&&ui.desc_s||'Busca la Verdad de Dios'):'Seek God\'s Truth',
+           o:isEs?(ui&&ui.desc_o||'Abre Tu Corazón'):'Open Your Heart',
+           a:isEs?(ui&&ui.desc_a||'Actúa en Fe'):'Act in Faith',
+           r:isEs?(ui&&ui.desc_r||'Responde en Oración'):'Respond Through Prayer'};
+  ['s','o','a','r'].forEach(function(k){
+    var ew=document.getElementById('lbl-'+k+'-w');if(ew)ew.textContent=_sw[k];
+    var ed=document.getElementById('lbl-'+k+'-d');if(ed)ed.textContent=_sd[k];
+  });
+}
+
+if (window.TTS) {
+  TTS.speakDirect = function(text) {
+    window._capturedSpeech.push(text);
+    console.log('[CAPTURED SPEECH]:', text);
+  };
+}
+
+
 </script>
 </body>
 </html>
